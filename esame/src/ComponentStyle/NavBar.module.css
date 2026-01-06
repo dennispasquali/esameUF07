@@ -1,0 +1,32 @@
+nav{
+  margin-top: 3%;
+  padding-left: 3%;
+  padding-bottom: 1%;
+  display:  flex;
+  gap: 3%;
+  flex-direction: row;
+  height: 48px;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+a{
+  display: inline-block;       /* Permette al link di avere dimensioni e padding */
+  text-decoration: none;
+  padding: 16px 16px 16px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 8px;
+  /*letter-spacing: -.01em;*/
+  font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: rgba(0, 0, 0,0.8);
+}
+
+#logo{
+  position: relative;
+  bottom: 7px;
+}
+
+a:hover {
+  background-color: #F3F4F6;   
+}

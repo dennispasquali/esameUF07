@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../ComponentStyle/SearchBar.css'; // Importiamo lo stile che definiremo dopo
+import  styles from'../ComponentStyle/SearchBar.module.css'; // Importiamo lo stile che definiremo dopo
 import Lente from '../assets/lente.svg';
 // Dati di esempio (potrebbero arrivare da un'API)
 // const prodotti = [
@@ -22,15 +22,15 @@ const SearchBar = () => {
 //   );
 
   return (
-    <div className="search-container">
+    <div className={styles.search_container}>
       {/* INPUT DI RICERCA */}
       <input 
         type="text" 
         placeholder="find a Product..." 
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="search-input"></input>
-      <div id='lente'>
+      ></input>
+      <div id={styles.lente}>
         <img src={Lente}/>
       </div>
 

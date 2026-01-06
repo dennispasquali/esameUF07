@@ -1,0 +1,120 @@
+/* Contenitore principale */
+.product_card {
+  font-family:"Amazon Ember", Arial, sans-serif;
+  border: 1px solid #e5e7eb;  /* Bordo sottile grigio */
+  border-radius: 8px;         /* Angoli smussati */
+  width: 250px;               /* Larghezza fissa (o usa width: 100% in una griglia) */
+  background: white;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;     /* Impila gli elementi verticalmente */
+  gap: 10px;                  /* Spazio tra gli elementi */
+  transition: box-shadow 0.3s ease;
+}
+
+.product_card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Ombra al passaggio del mouse */
+}
+
+/* Gestione Immagine */
+.product_image_container {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7f7f7; /* Sfondo grigino se l'immagine è png trasparente */
+  border-radius: 4px;
+}
+
+.product_image_container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* FONDAMENTALE: mantiene le proporzioni dell'oggetto */
+}
+
+/* Testi */
+.product_description {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3; /* Interlinea stretta */
+  color: #0F1111;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-family: "Amazon Ember", Arial, sans-serif;
+  /* CSS TRICK per troncare dopo 3 righe (stile Amazon) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* O 2 su mobile */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+}
+
+.product_description:hover {
+  color: #C7511F;
+  text-decoration: underline; 
+}
+
+.product_title {
+    font-family:"Amazon Ember", Arial, sans-serif;
+    color: #0F1111;
+}
+.product_rating {
+  font-size: 14px;
+  color: #007185; /* Colore oro Amazon */
+  margin-bottom: 24px;
+}
+
+.stars{
+    position: relative;
+    top: 4px;
+}
+
+.rating {
+  color: #007185; /* Colore link Amazon */
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+/* Prezzo */
+.price_row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0px;
+  margin-bottom: 10px;
+}
+
+.current_price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.old_price {
+  margin-left: 16px;
+  margin-top: 10px;
+  font-size: 12px;
+  text-decoration: line-through;
+  color: #565959;
+}
+
+/* Bottone */
+.add_to_cart_btn {
+  background-color: #ffd814; /* Giallo Amazon */
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add_to_cart_btn:hover {
+  background-color: #f7ca00; /* Giallo un po' più scuro */
+}
+
+.fraction {
+    margin-top: 3px;
+    font-size: 13px;
+}

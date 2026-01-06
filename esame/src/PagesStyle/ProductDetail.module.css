@@ -1,0 +1,220 @@
+/* Layout Generale */
+.pdp_container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family:"Amazon Ember", Arial, sans-serif;
+  color: #0F1111;
+}
+
+/* Griglia Principale: Immagine | Info | BuyBox */
+.product_main_section {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+/* 1. Colonna Immagine */
+.product_image_col {
+  flex: 0 0 35%; /* Occupa il 35% dello spazio */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.main_img {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+/* 2. Colonna Informazioni */
+.product_info_col {
+  flex: 1; /* Prende tutto lo spazio disponibile */
+  
+}
+
+.product_info_col h1 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.rating_row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.stars {
+  color: #FFA41C; /* Colore giallo Amazon */
+  font-size: 18px;
+}
+
+.rating_count {
+  position: relative;
+  top: 1px;
+}
+
+.numberOfRatings {
+  color: #007185;
+  position: relative;
+  bottom: 2px;
+}
+
+.separator {
+  border: 0;
+  border-top: 1px solid #E7E7E7;
+  margin: 15px 0;
+}
+
+/* Prezzi */
+.price_info {
+  margin-bottom: 20px;
+}
+
+.old_price {
+  text-decoration: line-through;
+  color: #565959;
+  font-size: 14px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.current_price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.vat_msg {
+  display: block;
+  font-size: 12px;
+  color: #565959;
+  margin-top: 5px;
+}
+
+.description_box h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.description_box p {
+  font-size: 15px;
+}
+
+/* 3. Colonna Buy Box (Destra) */
+.buy_box_col {
+  flex: 0 0 240px; /* Larghezza fissa */
+}
+
+.buy_box_card {
+  border: 1px solid #D5D9D9;
+  border-radius: 8px;
+  padding: 20px;
+  /* Rendila sticky se la pagina scorre */
+  position: sticky;
+  top: 20px; 
+}
+
+.price_large {
+  font-size: 22px;
+  font-weight: 700;
+  color: #B12704; /* Rosso scuro per il prezzo nel box */
+  margin-bottom: 10px;
+}
+
+.delivery_info {
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #007185;
+}
+
+/* Selettore Quantità */
+.quantity_selector {
+  margin-bottom: 15px;
+}
+.quantity_selector select {
+  padding: 5px;
+  border-radius: 7px;
+  border: 1px solid #D5D9D9;
+  box-shadow: 0 2px 5px rgba(15,17,17,.15);
+  background: #F0F2F2;
+  font-size: 14px;
+}
+
+/* Pulsanti */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(213,217,217,.5);
+}
+
+.btn_primary {
+  background-color: #FFD814; /* Giallo "Aggiungi al carrello" */
+}
+.btn_primary:hover {
+  background-color: #F7CA00;
+}
+
+.btn_secondary {
+  background-color: #FFA41C; /* Arancione "Acquista ora" */
+}
+.btn_secondary:hover {
+  background-color: #FA8900;
+}
+
+.secure_transaction {
+  font-size: 12px;
+  color: #565959;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.average_rating{
+  display: flex;
+}
+
+.big_score{
+  margin-right: 8px;
+}
+/* Responsive per Mobile */
+/* @media (max-width: 768px) {
+  .product_main_section {
+    flex-direction: column;
+  }
+  
+  .product_image_col, 
+  .buy_box_col {
+    flex: auto;
+    width: 100%;
+  }
+
+  .buy_box_card {
+    position: static; 
+  }
+} */
+
+#div_review{
+  border-top: 1px solid #e5e7eb;
+}
+
+#reviews_section{
+  margin-left: 2%;
+}

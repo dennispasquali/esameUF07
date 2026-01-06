@@ -1,0 +1,30 @@
+
+
+input {
+  /*height: 24px;*/
+  padding: 5px 5px 5px 5px;
+  border-radius: 6px;
+  border: 1px solid black;
+}
+
+
+#lente{
+  display: inline-block;
+  border-radius: 8px;
+  padding: 8px 8px 8px 8px;
+}
+
+#lente:hover{
+  background-color: #F3F4F6;
+}
+.search_container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+img{
+  margin-top: 2px;
+}
+
