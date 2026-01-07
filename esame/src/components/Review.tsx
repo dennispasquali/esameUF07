@@ -11,8 +11,8 @@ function Review(props: IReview) {
               <span>{props.userName}</span>
             </div>
             <div className={style.review_second_row}>
-              <span className={style.title}>{props.title}</span>
               <span><Rating name="read-only" value={props.rating} precision={0.1} size="small" readOnly /></span>
+              <span className={style.title}>{props.title}</span>
             </div>
             <div>
                 <p className={style.date}>Reviewed on: {props.date}</p>

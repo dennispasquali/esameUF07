@@ -218,3 +218,15 @@
 #reviews_section{
   margin-left: 2%;
 }
+
+#addReviewButton {
+  text-transform: none; /* Annulla il maiuscolo */
+  margin-right: 16px;
+  margin-bottom: 8px;
+
+}
+
+.title_thirdRow{
+  display: flex;
+  justify-content: space-between;
+}

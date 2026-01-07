@@ -24,10 +24,12 @@
 
 .review_second_row{
     display: flex;
+    gap: 12px;
 }
 
 p{
     max-width: 400px;
+    font-size: 15px;
 }
 
 .date {

@@ -4,7 +4,9 @@ import NavBar from "../components/NavBar";
 import style from "../PagesStyle/ProductDetail.module.css"; // Assicurati di creare questo file
 import { Rating, TextField } from "@mui/material";
 import Review from "../components/Review";
-
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add'
+import ReviewDialog from "../components/ReviewDialog";
 function ProductDetail() {
 
   const reviews=[
@@ -104,7 +106,17 @@ function ProductDetail() {
   const location = useLocation();
   const navigate = useNavigate();
   const productData = location.state;
+  const [openDialog,setOpenDialog]=useState(false);
 
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    
+    setOpenDialog(false);
+  };
   // Stato per la quantità selezionata
   const [quantity] = useState(1);
 
@@ -119,7 +131,9 @@ function ProductDetail() {
   if (!productData) return null;
 
   const priceFixed=productData.price.toFixed(2);
- 
+  
+
+  
   return (
     <>
       <NavBar />
@@ -222,7 +236,12 @@ function ProductDetail() {
                 {<Rating name={"read-only"} value={productData.rating} precision={0.1} size="small" readOnly />}
               </div>
             </div>
-            <p>Basato su {productData.numberOfRatings} recensioni globali</p>
+
+            <div className={style.title_thirdRow}>
+              <p>Basato su {productData.numberOfRatings} recensioni globali</p>
+              <Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Add a Review</Button>
+            </div>
+            <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog>
               <div id={style.div_review}>
                 {reviews.map((review) => (
                   <Review 
@@ -233,7 +252,7 @@ function ProductDetail() {
                     date={review.date}
                     userName={review.userName}
                     rating={review.rating}
-                        />
+                    />
                 ))}
             </div>
         </div>
