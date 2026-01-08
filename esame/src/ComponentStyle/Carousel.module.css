@@ -1,0 +1,49 @@
+/* 1. LA CORNICE (Viewport) */
+/* Questa è la finestra fissa: tutto ciò che esce da qui viene nascosto */
+.carouselContainer {
+    width: 97%;
+    height: 500px;     /* Altezza fissa */
+    margin: 2%;    /* Centrato nella pagina */
+    overflow: hidden;  /* IL TRUCCO: Nasconde le foto che sono fuori dai bordi */
+    border-radius: 10px;
+    position: relative; /* Serve per posizionare i bottoni sopra */
+}
+
+/* 2. IL NASTRO (Track) */
+/* Questa è la striscia lunga che contiene TUTTE le foto affiancate */
+.sliderTrack {
+    display: flex;     /* Mette le <li> una di fianco allaltra (non sotto) */
+    width: 100%;       /* Occupa tutto lo spazio disponibile */
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;  /* Toglie i pallini della lista */
+    
+    /* Questa è la magia dellanimazione: */
+    /* Quando cambiamo il transform via JS; ci mette 0.5s a spostarsi */
+    transition: transform 0.5s ease-in-out; 
+}
+
+/* 3. LA SINGOLA SLIDE */
+.slide {
+    /* Fondamentale: ogni slide deve essere larga ESATTAMENTE quanto la cornice */
+    min-width: 100%; 
+    height: 100%;
+}
+
+/* 4. LIMMAGINE */
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ritaglia limmagine per riempire il buco senza deformarsi */
+    display: block;    /* Rimuove spazi bianchi fastidiosi sotto le immagini */
+}
+
+.dotContainer {
+    position: absolute; 
+    bottom: 20px; 
+    left: 50%; 
+    transform: translate(-50%); 
+    display: flex; 
+    gap: 10px
+}

@@ -1,5 +1,10 @@
+
+import { useState } from "react";
+import Carousel from "../components/Carousel";
 import NavBar from "../components/NavBar";
 import ProductItem from "../components/ProductItem";
+import style from "../PagesStyle/Home.module.css";
+import type { IProductItem } from "../Interfaces/ProductItem";
 const prodotti = [
   {
     "id": 1,
@@ -272,13 +277,74 @@ const prodotti = [
     // oldPrice è opzionale, qui non c'è
   },
 ]
+
+
+
 function Home() {
+
+  const [endIndex,setEndIndex]=useState<number>(10);
+  const [startIndex,setStartIndex]=useState<number>(0);
+
+  const [productSliced,setProductSliced]=useState<IProductItem[]>(prodotti.slice(startIndex,endIndex))
+
+  let numberOfRow=(prodotti.length/10)+1;
+  if((prodotti.length/10)===0 && prodotti.length>=10) {
+    numberOfRow=prodotti.length/10;
+  }
+  // let endIndexL=10;
+  // let startIndexL=0;
+
+  function sliceNext() {
+    // endIndexL=
+    // startIndexL=
+    if(endIndex-(numberOfRow)*10<10 && endIndex-(numberOfRow)*10>0) {
+      setEndIndex(endIndex+(((numberOfRow*10)-endIndex)));
+      setStartIndex((startIndex+10));
+    }else if(endIndex+10<(numberOfRow)*10 && startIndex+10<(numberOfRow-1)*10) {
+      setEndIndex((endIndex+10));
+      setStartIndex((startIndex+10));
+    }
+    
+    
+
+    setProductSliced(prodotti.slice(startIndex,endIndex));
+  }
+
+  function slicePrev() {
+    if(endIndex%10!=0) {
+      setEndIndex(endIndex+(((numberOfRow*10)-endIndex)))
+    }
+    if(endIndex-10>0 && startIndex-10>=0) {
+      // endIndexL=(endIndex-10)
+      // startIndexL=(startIndex-10)
+      setEndIndex(endIndex=>endIndex-10);
+      setStartIndex(startIndex=>startIndex-10);
+    }
+   
+    setProductSliced(prodotti.slice(startIndex,endIndex));
+    
+    
+  }
+
+  
+  
     return (
         <>
             <NavBar/>
-            <div id='div-products'>
-      {prodotti.map((prodotto) => (
+            <div className={style.carousel}>
+              <Carousel/>
+            </div>
+            
+
+
+        <div className={style.div_products}>
+        {/* PRIMO CICLO (5 Righe) */}
+       
+          
+        
+              {productSliced.map((prodotto) => (
         <ProductItem 
+          key={prodotto.id}
           id={prodotto.id}
           // Passiamo i dati corretti secondo la tua nuova interfaccia
           title={prodotto.title}
@@ -290,7 +356,36 @@ function Home() {
           numberOfRatings={prodotto.numberOfRatings} // Nuovo
                />
       ))}
-    </div>
+            </div>
+      
+
+      <button 
+            onClick={sliceNext} 
+        >
+           Avanti ▶
+        </button>
+
+        <button 
+            onClick={slicePrev} 
+              >
+           ◀ Indietro
+        </button>
+            {/* <div className={style.div_products}>
+      {prodotti.map((prodotto) => (
+        <ProductItem 
+          key={prodotto.id}
+          id={prodotto.id}
+          // Passiamo i dati corretti secondo la tua nuova interfaccia
+          title={prodotto.title}
+          description={prodotto.description} // Nuovo
+          image={prodotto.image}
+          price={prodotto.price}
+          oldPrice={prodotto.oldPrice}
+          rating={prodotto.rating}
+          numberOfRatings={prodotto.numberOfRatings} // Nuovo
+               />
+      ))}
+    </div> */}
         </>
     ) 
 }
