@@ -1,0 +1,173 @@
+
+.footer {
+    width: 100%;
+  margin-top:200px;
+  background-color: #1D1D1B; /* Nero "Rich Black" del logo */
+  color: #F5F5F5; /* Bianco sporco per leggerezza */
+  font-family: 'Open Sans', sans-serif;
+  position: relative;
+  /* Linea superiore arcobaleno CMYK decorativa */
+  border-top: 4px solid transparent;
+  background-image: linear-gradient(#1D1D1B, #1D1D1B);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+/* --- PRIMA RIGA (Contenuti principali) --- */
+.firstRow {
+    
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 50px;
+  gap: 2rem;
+}
+
+/* Colonna 1: Logo e Info */
+.logo {
+  flex: 1 1 300px; /* Larghezza base 300px, ma flessibile */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Importante: Sfondo bianco per il logo per renderlo leggibile sul nero */
+.logo img {
+  max-width: 250px;
+  height: auto;
+  object-fit: contain;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-left: 8px;
+
+}
+
+.copyright {
+  font-size: 0.75rem;
+  color: #888888;
+  margin-top: 1rem;
+}
+
+/* Colonna 2: Metodi di Pagamento */
+.paymentMethod {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start; /* Allinea a sinistra */
+}
+
+
+/* Contenitore icone pagamento (per allinearle bene se sono tante) */
+.paymentMethod img {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+
+/* Colonna 3: Social */
+.social {
+  flex: 0 1 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Styling per il bottone MUI dentro il footer */
+.social button {
+  background-color: rgba(255, 255, 255, 0.1); /* Sfondo leggero */
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.socialBtn[data-social="0"]:hover {
+  background-color: #1877F2; 
+  transform: translateY(-2px);
+}
+
+/* YouTube (Rosso) */
+.socialBtn[data-social="2"]:hover {
+  background-color: #FF0000; 
+  transform: translateY(-2px);
+}
+
+/* Instagram (Magenta) */
+.socialBtn[data-social="1"]:hover {
+  /* Usa un gradiente per Instagram o il magenta piatto #E1306C */
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  /* Se preferisci il colore piatto magenta del tuo logo usa: background-color: #E6007E; */
+  transform: translateY(-2px);
+}
+
+
+
+
+/* --- SECONDA RIGA (Link Link Link) --- */
+.secondRow {
+  background-color: #141412; /* Un nero leggermente più scuro */
+  margin-top: 3rem;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  border-top: 1px solid #333;
+}
+
+.secondRow p {
+  margin: 0;
+}
+
+.secondRow a {
+  text-decoration: none;
+  color: #bbbbbb;
+  font-size: 0.85rem;
+  font-weight: 600; /* Semi-bold */
+  transition: color 0.3s ease;
+}
+
+.secondRow a:hover {
+  color: #009FE3; /* Hover Ciano */
+}
+
+
+
+
+/* --- RESPONSIVE (Mobile) --- */
+@media (max-width: 768px) {
+  .firstRow {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .logo, .paymentMethod, .social {
+    align-items: center; /* Centra tutto su mobile */
+    width: 100%;
+  }
+
+  .paymentMethod h1 {
+    font-size: 1.5rem;
+  }
+  
+  .secondRow {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}

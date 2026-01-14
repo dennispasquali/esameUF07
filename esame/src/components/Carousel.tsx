@@ -46,26 +46,17 @@ function Carousel() {
         return () => clearInterval(interval);
     }, []);
 
-    // Effect che controlla ESCLUSIVAMENTE l'aggiornamento dell'array
+    
     useEffect(() => {
-        // Se siamo arrivati all'ultima immagine disponibile...
+
         if (currentIndex === extendedImages.length - 1) {
-            
-            // 1. Aggiungiamo la nuova immagine in fondo
             const nextImg = getNextImage(extendedImages);
             let newArray = [...extendedImages, nextImg];
             let newIndex = currentIndex;
 
-            // 2. LOGICA DI PULIZIA (Anti-Crash)
-            // Se l'array supera i 15 elementi, tagliamo i primi 5 per liberare memoria
             if (newArray.length > 15) {
                 const elementsToRemove = 5;
-                
-                // Tagliamo i primi 5
                 newArray = newArray.slice(elementsToRemove);
-                
-                // IMPORTANTE: Dobbiamo spostare l'indice indietro di 5 posizioni!
-                // Altrimenti l'utente vedrebbe un salto in avanti.
                 newIndex = newIndex - elementsToRemove;
                 
                 // Disattiviamo momentaneamente l'animazione per rendere il taglio invisibile all'occhio

@@ -3,8 +3,10 @@ import style from'../ComponentStyle/ProductItem.module.css'
 import Rating from "@mui/material/Rating";
 import { useNavigate } from "react-router-dom";
 
-
-function ProductItem({id,image, title,description,rating,numberOfRatings,price,oldPrice}: IProductItem) {
+type TProductItem = IProductItem & {
+  reset: () => void;
+};
+function ProductItem({reset,id,image, title,description,rating,numberOfRatings,price,oldPrice}: TProductItem) {
     
 
     const navigate = useNavigate();
@@ -20,7 +22,7 @@ function ProductItem({id,image, title,description,rating,numberOfRatings,price,o
     }
     // Funzione handler nominata (non anonima/lambda)
     function handleProductClick() {
-        
+        reset();
         // Naviga verso l'URL specifico usando l'ID passato nelle props
         navigate(`/home/productDetail/${id}`, {state: productData});
     }

@@ -1,4 +1,4 @@
-nav{
+.nav{
   margin-top: 3%;
   padding-left: 3%;
   padding-bottom: 1%;
@@ -10,7 +10,7 @@ nav{
   border-bottom: 1px solid #e5e7eb;
 }
 
-a{
+.nav a{
   display: inline-block;       /* Permette al link di avere dimensioni e padding */
   text-decoration: none;
   padding: 16px 16px 16px 16px;
@@ -22,11 +22,11 @@ a{
   color: rgba(0, 0, 0,0.8);
 }
 
-#logo{
-  position: relative;
-  bottom: 7px;
+.nav img{
+  margin-top: 0px;
+  margin-bottom: 8px;
 }
 
-a:hover {
+.nav a:hover {
   background-color: #F3F4F6;   
 }

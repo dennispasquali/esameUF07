@@ -7,6 +7,7 @@ import Review from "../components/Review";
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add'
 import ReviewDialog from "../components/ReviewDialog";
+import Footer from "../components/Footer";
 function ProductDetail() {
 
   const reviews=[
@@ -258,6 +259,8 @@ function ProductDetail() {
         </div>
 
       </div>
+
+      <Footer/>
     </>
   );
 }

@@ -1,12 +1,32 @@
 .div_products{
   margin-top: 5%;
+  margin-left: 4%;
+  margin-right: auto;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 30px;
 }
 
 .carousel {
     margin-top: 2%;
+}
+
+.buttons_container{
+  margin-left: 5%;
+  display: flex;
+  gap: 16px;
+  margin-top: 72px;
+}
+
+.info_page p {
+color:  rgb(86, 89, 89);
+font-family: "Amazon Ember", Arial, sans-serif;
+font-size: 15px;
+}
+
+.info_page{
+  margin-left: 5%;
+  margin-top: 24px;
 }

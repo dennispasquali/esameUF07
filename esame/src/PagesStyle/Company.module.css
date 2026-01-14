@@ -1,0 +1,93 @@
+.card_container{
+    display: flex;
+    gap: 24px;
+    margin:4%;
+    margin-top: 10%;
+}
+
+.video video{
+   width: 100%;
+  height: 100%;
+  object-fit: cover; /* Riempie il buco senza deformarsi */
+  display: block;
+    
+}
+
+.video{
+     margin-top: 2%;
+    width: 92%;
+    overflow: hidden;
+    margin-left: 4%;
+    margin-right: 4%;
+    max-height: 700px;
+    border: 8px;
+    border-radius: 10px;
+}
+
+
+
+
+/* 1. Il contenitore del testo */
+.history {
+    margin-top: 50px; 
+    max-width: 1200px; 
+    margin-left: 4%; 
+    margin-right: auto;
+}
+
+
+.history p {
+    font-family: sans-serif;
+    color: #777777;
+    margin-bottom: 20px;
+    font-size: 16px; /* Assicurati che sia leggibile */
+    line-height: 1.6; /* Dà aria tra le righe */
+    white-space:normal;
+    text-align: justify;
+    width: auto; 
+    max-width: 100%;
+    hyphens: auto; 
+    -webkit-hyphens: auto;
+}
+
+/* 3. Il Titolo */
+.history h2 {
+    font-family: sans-serif;
+    color: #252525;
+    font-size: 24px;
+    margin-bottom: 32px;
+    text-transform: uppercase; /* Facoltativo: rende il titolo maiuscolo */
+    text-align: left; /* O center, se preferisci */
+}
+
+
+
+.location p {
+    font-family: sans-serif;
+    color: #777777;
+    margin-bottom: 20px;
+    font-size: 16px; /* Assicurati che sia leggibile */
+    line-height: 1.6; /* Dà aria tra le righe */
+    white-space:normal;
+    text-align: justify;
+    width: auto; 
+    max-width: 100%;
+    hyphens: auto; 
+    -webkit-hyphens: auto;
+}
+
+/* 3. Il Titolo */
+.location h2 {
+    font-family: sans-serif;
+    color: #252525;
+    font-size: 24px;
+    margin-bottom: 32px;
+    text-transform: uppercase; /* Facoltativo: rende il titolo maiuscolo */
+    text-align: left; /* O center, se preferisci */
+}
+
+.location {
+    margin-top: 80px; 
+    margin-left: 4%; 
+    margin-right: auto;
+}
