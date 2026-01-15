@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import ProductDetail from './pages/ProductDetail';
 import Home from './pages/Home';
 import Company from './pages/Company';
+import Registration from './pages/Registration';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/contacts' element={<Contacts/>}></Route>
             <Route path='/company' element={<Company/>}></Route>
+            <Route path='/registration' element={<Registration/>}></Route>
             <Route path='/home/productDetail/:id' element={<ProductDetail/>}></Route>
             <Route path='*' element={<PageNotFound/>}></Route>
         </Routes>

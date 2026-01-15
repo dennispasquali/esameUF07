@@ -20,18 +20,15 @@ function Carousel() {
    
     const [transitionEnabled, setTransitionEnabled] = useState(true);
 
-    // Funzione PURA: crea solo il dato, non tocca lo stato
     function getNextImage(currentList: ICarouselImage[]) {
        
         const originalIndex = nextCopyIndex.current % imagesData.length;
         
         const newImage = { ...imagesData[originalIndex] };
         
-        // Assegniamo un ID unico basato sull'ultimo della lista + 1
-        // (Usiamo un timestamp o random se la lista fosse vuota, ma qui non lo è mai)
+        
         newImage.id = currentList[currentList.length - 1].id + 1;
         
-        // Prepariamo il puntatore per la prossima volta
         nextCopyIndex.current += 1;
         
         return newImage;

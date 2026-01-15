@@ -1,52 +1,54 @@
 
-import { useState, type ChangeEvent, type FormEvent} from "react"
+import { useState, type FormEvent} from "react"
 import style from "../PagesStyle/Login.module.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import Google_logo from "../assets/google_logo.svg";
+import { Link } from "react-router-dom";
+import { EmailValidation } from "../hooks/emailValidation";
 function Login() {
 
-    const [email,setEmail]=useState<string>();
-    const [invalidEmailMessage,setInvalidEmailMessage]=useState<string>("");
+    // const [email,setEmail]=useState<string>();
+    // const [invalidEmailMessage,setInvalidEmailMessage]=useState<string>("");
     const [password,setPwd]=useState<string>();
-
-   const handleSubmit = (e:FormEvent<HTMLFormElement>) : void => {
-        e.preventDefault(); // Impedisce il ricaricamento della pagina
-        console.log("Dati inviati:", { email, password });
-    
-    
+    const { email, invalidEmailMessage, onChange } = EmailValidation();
+    const handleSubmit = (e:FormEvent<HTMLFormElement>) : void => {
+            e.preventDefault(); // Impedisce il ricaricamento della pagina
+            console.log("Dati inviati:", { email, password });
+        
+        
     };
 
 
-    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
-        const email:string=e.target.value;
+//     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
+//         const email:string=e.target.value;
         
-        let nrAt=0;
-        let nrPoint=0;
-        //nr @
-        let indexAt=0;
-        let indexPoint=0;
-        for (let i = 0; i < email.length; i++) {
-            if(email.charAt(i)==='@') {
-                nrAt++;
-                indexAt=i;
-            } else if(email.charAt(i)=='.') {
-                nrPoint++;
-                indexPoint=i;
+//         let nrAt=0;
+//         let nrPoint=0;
+//         //nr @
+//         let indexAt=0;
+//         let indexPoint=0;
+//         for (let i = 0; i < email.length; i++) {
+//             if(email.charAt(i)==='@') {
+//                 nrAt++;
+//                 indexAt=i;
+//             } else if(email.charAt(i)=='.') {
+//                 nrPoint++;
+//                 indexPoint=i;
 
-            }
+//             }
             
-        }
+//         }
 
-        if(nrAt===1 && nrPoint===1 && indexAt>0 && indexPoint-indexAt>1 && email.length-indexPoint>1 && email.substring(indexAt+1,indexPoint).trim()!="") {
-            setEmail(e.target.value);
-            setInvalidEmailMessage("");
-        } else {
-            setEmail(e.target.value);
-            setInvalidEmailMessage("email non valida");
-        }
-  };
+//         if(nrAt===1 && nrPoint===1 && indexAt>0 && indexPoint-indexAt>1 && email.length-indexPoint>1 && email.substring(indexAt+1,indexPoint).trim()!="") {
+//             setEmail(e.target.value);
+//             setInvalidEmailMessage("");
+//         } else {
+//             setEmail(e.target.value);
+//             setInvalidEmailMessage("email non valida");
+//         }
+//   };
     return (
        <>
        <div className={style.form}>
@@ -66,7 +68,7 @@ function Login() {
           label="Required"
           type="email"
           value={email}
-          onChange={handleEmailChange} 
+          onChange={(e) => onChange(e.target.value)} 
         />
           {invalidEmailMessage!="" && <span className={style.invalidEmail}>{invalidEmailMessage}</span>}
         </div>
@@ -99,7 +101,7 @@ function Login() {
                 <img src={Google_logo}></img>
                 <span>Google</span>
             </IconButton>
-            <span className={style.noAccount}><p>Non hai ancora un Account?</p><a href="">Registrati</a></span>
+            <span className={style.noAccount}><p>Non hai ancora un Account?</p><Link to='/registration'>Registrati</Link></span>
         </div>
       
       
