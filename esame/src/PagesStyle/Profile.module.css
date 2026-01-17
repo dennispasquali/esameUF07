@@ -1,0 +1,156 @@
+.body{
+    margin-top: 4%;
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 100%;
+    width: 100%;
+
+}
+
+:root{
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+}
+
+body h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5%;
+    margin-top: 0;
+}
+
+.profile{
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    width: 85%;
+    margin-bottom: 10%;
+    background-color: #0F172A ;
+    margin-top: 5%;
+    padding-left: 64px;
+    padding-right: 24px;
+    padding-top: 64px;
+    padding-bottom: 112px;
+    border-radius: 8px;
+
+}
+
+
+.effect{
+    position: absolute;
+    top: 175px;
+    right: 0px;
+    width: 50%;
+    height: 280px;
+   
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.profile span{
+    font-size: 34px;
+    font-weight: 700;
+}
+.profile p{
+    font-size: 16px;
+    color: #FFFFFF;
+    opacity: 0.8;
+    margin-left: 2px;
+}
+.profile_avatar{
+    border-radius: 50%;
+    height: 100px;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+.last_orders{
+    height: 100%;
+    margin-bottom: 10%;
+    background-color: white;
+     border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    padding: 24px;
+
+}
+.your_orders{
+    height: 100%;
+    margin-bottom: 10%;
+    background-color: white;
+     border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    padding: 24px;
+}
+
+
+
+.dashboardMenu{
+    width: 15%;
+    list-style: none;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    z-index: 100000;
+    background-color: white; 
+    margin-left: 40px;
+}
+
+.pannels{
+    position: relative;
+    bottom: 200px;
+    display: flex;
+    gap: 100px;
+  
+}
+
+
+
+.dashboardMenu  div:hover {
+    background-color: #F3F4F6;
+    border-radius: 8px;   
+}
+
+.dashboardMenu button{
+    border-radius: 8px;
+}
+
+.dashboardMenu div{
+    width: 100%;
+}
+
+.dashboardMenu p{
+    margin-left: 12px;
+}
+
+.stats{
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    list-style: none;
+}
+
+.stats div{
+    background-color: white;
+    padding: 16px;
+    border-radius: 16px;
+    width: 100px;
+    border: 1.5px solid #e5e7eb;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stat_title{
+    font-weight: 500;
+    color: #64748B;
+    font-size: 14px;
+}
+
+.stat_number{
+    color: #0F172A;
+    font-weight: 700;
+    font-size: 34px;
+    margin: 0;
+}

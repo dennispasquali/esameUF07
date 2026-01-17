@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import Google_logo from "../assets/google_logo.svg";
 import { Link } from "react-router-dom";
-import { EmailValidation } from "../hooks/emailValidation";
+import { EmailValidation } from "../hooks/EmailValidation";
 function Login() {
 
     // const [email,setEmail]=useState<string>();
@@ -84,7 +84,7 @@ function Login() {
             onChange={(e) => setPwd(e.target.value)} 
           
         />
-        <a href="#" className={style.forgot_password}>Forgot password?</a>
+        <a href="#" className={style.forgot_password}>Password Dimenticata?</a>
         </div>
 
         <div  className={style.loginButton}>

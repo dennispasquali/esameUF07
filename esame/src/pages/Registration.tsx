@@ -2,7 +2,7 @@ import TextField from "@mui/material/TextField";
 import style from "../PagesStyle/Registration.module.css";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { EmailValidation } from "../hooks/emailValidation";
+import { EmailValidation } from "../hooks/EmailValidation";
 
 
 function Registration() {
