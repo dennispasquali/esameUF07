@@ -240,7 +240,7 @@ function ProductDetail() {
 
             <div className={style.title_thirdRow}>
               <p>Basato su {productData.numberOfRatings} recensioni globali</p>
-              <Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Add a Review</Button>
+              <Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Aggiungi Recensione</Button>
             </div>
             <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog>
               <div id={style.div_review}>

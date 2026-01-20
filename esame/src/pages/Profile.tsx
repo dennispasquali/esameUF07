@@ -24,90 +24,102 @@ const user = {
 const orders : IOrder[]= [
   { 
     id: "ORD-24-882", date: "14 Gen 2026", 
-    title: "1000 Biglietti da Visita Soft Touch", 
-    price: "€ 45,00", status: "In Produzione", statusColor: "warning",
+    title: "Biglietti da Visita Soft Touch", 
+    price: 45.00, status: "In Produzione", statusColor: "warning",
     url: "https://picsum.photos/800/600?random=1",
-    alt: "Vista panoramica di una montagna innevata" 
+    alt: "Vista panoramica di una montagna innevata",
+    quantity: 1000 
   },
   { 
     id: "ORD-24-850", date: "10 Gen 2026", 
-    title: "2 Roll-up 85x200 Deluxe", 
-    price: "€ 120,00", status: "Spedito", statusColor: "secondary",
+    title: "Roll-up 85x200 Deluxe", 
+    price: 120.00, status: "Spedito", statusColor: "secondary",
     url: "https://picsum.photos/800/600?random=2",
-    alt: "Laptop su una scrivania in ufficio moderno" 
+    alt: "Laptop su una scrivania in ufficio moderno",
+    quantity: 2, 
   },
   { 
     id: "ORD-23-999", date: "20 Dic 2025", 
-    title: "50 Cartelline Portadocumenti", 
-    price: "€ 85,50", status: "Consegnato", statusColor: "success",
+    title: "Cartelline Portadocumenti", 
+    price: 85.50, status: "Consegnato", statusColor: "success",
     url: "https://picsum.photos/800/600?random=3",
-    alt: "Tazza di caffè fumante su tavolo di legno" 
+    alt: "Tazza di caffè fumante su tavolo di legno",
+    quantity: 50 
   },
 
    { 
     id: "ORD-24-883", date: "14 Gen 2026", 
     title: "1000 Biglietti da Visita Soft Touch", 
-    price: "€ 45,00", status: "In Produzione", statusColor: "warning",
+    price: 45.00, status: "In Produzione", statusColor: "warning",
     url: "https://picsum.photos/800/600?random=1",
-    alt: "Vista panoramica di una montagna innevata" 
+    alt: "Vista panoramica di una montagna innevata",
+    quantity: 1000, 
   },
   { 
     id: "ORD-24-851", date: "10 Gen 2026", 
-    title: "2 Roll-up 85x200 Deluxe", 
-    price: "€ 120,00", status: "Spedito", statusColor: "secondary",
+    title: "Roll-up 85x200 Deluxe", 
+    price: 120.00, status: "Spedito", statusColor: "secondary",
     url: "https://picsum.photos/800/600?random=2",
-    alt: "Laptop su una scrivania in ufficio moderno" 
+    alt: "Laptop su una scrivania in ufficio moderno",
+    quantity: 2, 
   },
   { 
     id: "ORD-23-1000", date: "20 Dic 2025", 
-    title: "50 Cartelline Portadocumenti", 
-    price: "€ 85,50", status: "Consegnato", statusColor: "success",
+    title: "Cartelline Portadocumenti", 
+    price: 85.50, status: "Consegnato", statusColor: "success",
     url: "https://picsum.photos/800/600?random=3",
-    alt: "Tazza di caffè fumante su tavolo di legno" 
+    alt: "Tazza di caffè fumante su tavolo di legno",
+    quantity: 50, 
   },
 
    { 
     id: "ORD-24-884", date: "14 Gen 2026", 
-    title: "1000 Biglietti da Visita Soft Touch", 
-    price: "€ 45,00", status: "In Produzione", statusColor: 'warning',
+    title: "Biglietti da Visita Soft Touch", 
+    price: 45.00, status: "In Produzione", statusColor: 'warning',
     url: "https://picsum.photos/800/600?random=1",
-    alt: "Vista panoramica di una montagna innevata" 
+    alt: "Vista panoramica di una montagna innevata",
+    quantity: 1000, 
   },
   { 
     id: "ORD-24-852", date: "10 Gen 2026", 
-    title: "2 Roll-up 85x200 Deluxe", 
-    price: "€ 120,00", status: "Spedito", statusColor: "secondary",
+    title: "Roll-up 85x200 Deluxe", 
+    price: 120.00, status: "Spedito", statusColor: "secondary",
     url: "https://picsum.photos/800/600?random=2",
-    alt: "Laptop su una scrivania in ufficio moderno" 
+    alt: "Laptop su una scrivania in ufficio moderno",
+    quantity: 2, 
   },
   { 
     id: "ORD-23-1002", date: "20 Dic 2025", 
-    title: "50 Cartelline Portadocumenti", 
-    price: "€ 85,50", status: "Consegnato", statusColor: "success",
+    title: "Cartelline Portadocumenti", 
+    price: 85.50, status: "Consegnato", statusColor: "success",
     url: "https://picsum.photos/800/600?random=3",
-    alt: "Tazza di caffè fumante su tavolo di legno" 
+    alt: "Tazza di caffè fumante su tavolo di legno",
+    quantity: 50, 
   },
 
    { 
     id: "ORD-24-887", date: "14 Gen 2026", 
-    title: "1000 Biglietti da Visita Soft Touch", 
-    price: "€ 45,00", status: "In Produzione", statusColor: "warning",
+    title: "Biglietti da Visita Soft Touch", 
+    price: 45.00, status: "In Produzione", statusColor: "warning",
     url: "https://picsum.photos/800/600?random=1",
-    alt: "Vista panoramica di una montagna innevata" 
+    alt: "Vista panoramica di una montagna innevata",
+    quantity: 1000, 
   },
   { 
     id: "ORD-24-853", date: "10 Gen 2026", 
-    title: "2 Roll-up 85x200 Deluxe", 
-    price: "€ 120,00", status: "Spedito", statusColor: "secondary",
+    title: "Roll-up 85x200 Deluxe", 
+    price: 120.00, status: "Spedito", statusColor: "secondary",
     url: "https://picsum.photos/800/600?random=2",
-    alt: "Laptop su una scrivania in ufficio moderno" 
+    alt: "Laptop su una scrivania in ufficio moderno",
+    quantity: 2, 
   },
   { 
     id: "ORD-23-1003", date: "20 Dic 2025", 
-    title: "50 Cartelline Portadocumenti", 
-    price: "€ 85,50", status: "Consegnato", statusColor: "success",
+    title: "Cartelline Portadocumenti", 
+    price: 85.50, status: "Consegnato", statusColor: "success",
     url: "https://picsum.photos/800/600?random=3",
-    alt: "Tazza di caffè fumante su tavolo di legno" 
+    alt: "Tazza di caffè fumante su tavolo di legno",
+    quantity: 50, 
   },
 ];
 

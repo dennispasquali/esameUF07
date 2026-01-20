@@ -1,17 +1,22 @@
 
 
-input {
-  /*height: 24px;*/
+.search_container input {
+  height: 16px;
   padding: 5px 5px 5px 5px;
   border-radius: 6px;
-  border: 1px solid black;
+
+}
+
+.search_container input>fieldset{
+ padding: 2px!important;
 }
 
 
 #lente{
   display: inline-block;
   border-radius: 8px;
-  padding: 8px 8px 8px 8px;
+  padding: 8px 8px 0px 8px;
+
 }
 
 #lente:hover{
@@ -24,7 +29,7 @@ input {
   gap: 12px;
 }
 
-img{
+.search_container img{
   margin-top: 2px;
 }
 

@@ -1,0 +1,199 @@
+.body{
+    margin-top: 4%;
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 100%;
+    width: 100%;
+
+}
+
+:root{
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+}
+
+body h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5%;
+    margin-top: 0;
+}
+
+.introduction{
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    width: 85%;
+    margin-bottom: 10%;
+    background-color: #0F172A ;
+    margin-top: 5%;
+    padding-left: 64px;
+    padding-right: 24px;
+    padding-top: 64px;
+    padding-bottom: 112px;
+    border-radius: 8px;
+
+}
+
+.effect{
+    position: absolute;
+    top: 175px;
+    right: 0px;
+    width: 50%;
+    height: 280px;   
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+}
+.cartOrder_list{
+    list-style: none;
+    padding: 0;
+}
+
+.cartColumn{
+    position: relative;
+    bottom: 180px;
+    margin-left: 4%;
+}
+.cartOrder{
+    width: 60%;
+    background-color: white;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 32px;
+    
+}
+
+.cartOrder img {
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+
+.order_title{
+    line-height: 1.6;
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0;
+}
+
+.order_quantity{
+    line-height: 1.43;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+}
+
+.order_unitPrice{
+    line-height: 1.66;
+    font-size: 12px;
+    color: #1976d2;
+    font-weight: 600;
+}
+
+
+.totalPricePerItem{
+    font-size: 20px;
+    line-height: 1.6;
+    font-weight: 700;
+}
+
+
+.counter{
+    display: flex;
+    border:#e5e7eb 1px solid;
+    gap: 8px;
+    border-radius: 16px;
+}
+
+.checkout{
+    width: 30%;
+    background-color: white;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 32px;
+    margin-top: 32px;
+}
+
+.checkout_row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout h6{
+    font-size: 20px;
+font-weight:700;
+margin: 0;
+margin-bottom: 16px;
+line-height:32px;
+}
+
+.checkout_row p{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.subTotal ,.iva,.shipping{
+    color: rgba(0, 0, 0, 0.80)!important;
+    font-weight:500!important;
+}
+
+.shipping_free{
+    color: rgb(46, 125, 50)!important;
+    font-weight:700!important;
+    font-size: 24px!important; 
+}
+
+.checkout_row h6{
+    font-size: 20px;
+    margin: 0;
+    margin-top: 8px;
+}
+
+.checkout_row h4{
+    font-size: 34px;
+    line-height: 1.235;
+    color: #1976d2;
+    font-weight: 700;
+    margin: 0;
+    margin-top: 8px;
+}
+
+.checkout_button{
+    margin-top: 50px;
+}
+
+.coupon_container{
+    width: 20%;
+    background-color: white;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1.5px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+}
+
+.coupon_container h6{
+    line-height: 1.57;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 0;
+    margin-bottom: 16px;
+    color: rgba(0, 0, 0, 0.80);
+}
+
+.promotionCode_container{
+    display: flex;
+    gap: 8px;
+}

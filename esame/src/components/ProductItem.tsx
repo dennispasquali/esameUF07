@@ -2,13 +2,25 @@ import type { IProductItem } from "../Interfaces/ProductItem";
 import style from'../ComponentStyle/ProductItem.module.css'
 import Rating from "@mui/material/Rating";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import { useState } from "react";
+import Alert from "@mui/material/Alert";
 
 type TProductItem = IProductItem & {
   reset: () => void;
 };
 function ProductItem({reset,id,image, title,description,rating,numberOfRatings,price,oldPrice}: TProductItem) {
-    
+    const [openSnackBar,setOpenSnackBar]=useState(false);
 
+    function handleSnack() :boolean {
+      if(!openSnackBar) {
+        setOpenSnackBar(true);
+        return true;
+      } else {
+        setOpenSnackBar(false);
+        return false;
+      }
+    }
     const navigate = useNavigate();
     const productData ={
             id,
@@ -30,7 +42,7 @@ function ProductItem({reset,id,image, title,description,rating,numberOfRatings,p
     const priceString = price.toFixed(2);
     const [intero, decimali] = priceString.split('.');
     return (
-    <div className={style.product_card} onClick={handleProductClick}>
+    <div className={style.product_card} >
       {/* 1. Immagine Prodotto */}
       <div className={style.product_image_container}>
         <img src={image} alt={title} />
@@ -39,7 +51,7 @@ function ProductItem({reset,id,image, title,description,rating,numberOfRatings,p
       {/* 2. Informazioni */}
       <div className={style.product_info}>
         <h3 className={style.product_title}>{title}</h3>
-        <p className={style.product_description}>{description}</p>
+        <p   onClick={handleProductClick} className={style.product_description}>{description}</p>
         {/* Simulazione stelline */}
         <div className={style.product_rating}>
             <span className={style.rating}>({rating})</span><span className={style.stars}><Rating name="read-only" value={rating} precision={0.1} size="small" readOnly /></span><span className={style.rating_count}>({numberOfRatings})</span>
@@ -52,7 +64,25 @@ function ProductItem({reset,id,image, title,description,rating,numberOfRatings,p
             <span className={style.fraction}>{decimali}</span>
           {oldPrice && <span className={style.old_price}>Consigliato €{oldPrice}</span>}
           </div>
-          <button className={style.add_to_cart_btn}>Aggiungi al carrello</button>
+          <button onClick={handleSnack} className={style.add_to_cart_btn}>Aggiungi al carrello</button>
+          <Snackbar
+
+          open={openSnackBar}
+          autoHideDuration={1000}
+          onClose={handleSnack}
+ 
+        >
+
+
+          <Alert
+    onClose={handleSnack}
+    severity="success"
+    sx={{ width: '100%' }}
+  >
+    Prodotto aggiunto al carrello
+  </Alert>
+        </Snackbar>
+
         </div>
       </div>
     </div>

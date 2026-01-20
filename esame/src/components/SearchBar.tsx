@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import  styles from'../ComponentStyle/SearchBar.module.css'; // Importiamo lo stile che definiremo dopo
 import Lente from '../assets/lente.svg';
+import TextField from '@mui/material/TextField';
 // Dati di esempio (potrebbero arrivare da un'API)
 // const prodotti = [
 //   "Apple MacBook Pro",
@@ -12,7 +12,7 @@ import Lente from '../assets/lente.svg';
 // ];
 
 const SearchBar = () => {
-  const [query, setQuery] = useState("");
+ 
 
   // Logica di filtraggio:
   // 1. Prende la lista prodotti
@@ -24,12 +24,10 @@ const SearchBar = () => {
   return (
     <div className={styles.search_container}>
       {/* INPUT DI RICERCA */}
-      <input 
-        type="text" 
-        placeholder="find a Product..." 
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      ></input>
+       <TextField 
+          size="small" 
+          placeholder="Trova Prodotti..." 
+      />
       <div id={styles.lente}>
         <img src={Lente}/>
       </div>

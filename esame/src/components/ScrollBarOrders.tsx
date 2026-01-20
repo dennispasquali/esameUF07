@@ -75,7 +75,7 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
                     draggable={false}
                     />
                     <div>
-                        <p className={style.order_title}>{order.title}</p>
+                        <p className={style.order_title}>{order.quantity} {order.title}</p>
                         <span className={style.order_id_date}>{order.id} • {order.date}</span>
                     </div>
 
@@ -90,7 +90,7 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
                                 />
                          </ThemeProvider>
                         
-                        <p className={style.price}>{order.price}</p>
+                        <p className={style.price}>€ {order.price}</p>
                   
                     </div>
                      
@@ -109,7 +109,7 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
                         startIcon={<LocalShippingIcon />} 
                         sx={{ color: 'text.secondary' }}
                     >
-                        Riordina
+                        Visualizza il tracking
                     </Button>
                      </div>
                      

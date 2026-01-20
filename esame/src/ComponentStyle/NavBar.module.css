@@ -30,3 +30,8 @@
 .nav a:hover {
   background-color: #F3F4F6;   
 }
+
+.cart{
+position: relative;
+top: 2px;
+}
