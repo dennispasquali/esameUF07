@@ -3,24 +3,15 @@ import style from'../ComponentStyle/ProductItem.module.css'
 import Rating from "@mui/material/Rating";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
-import { useState } from "react";
 import Alert from "@mui/material/Alert";
+import { SnackBarCart } from "../hooks/SnackBarCart";
 
 type TProductItem = IProductItem & {
   reset: () => void;
 };
 function ProductItem({reset,id,image, title,description,rating,numberOfRatings,price,oldPrice}: TProductItem) {
-    const [openSnackBar,setOpenSnackBar]=useState(false);
-
-    function handleSnack() :boolean {
-      if(!openSnackBar) {
-        setOpenSnackBar(true);
-        return true;
-      } else {
-        setOpenSnackBar(false);
-        return false;
-      }
-    }
+    
+    const { openSnackBar, handleSnack} = SnackBarCart();
     const navigate = useNavigate();
     const productData ={
             id,

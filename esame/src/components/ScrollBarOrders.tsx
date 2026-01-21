@@ -17,7 +17,7 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
     const theme = createTheme({
         palette: {
             background: { default: '#f8f9fa' },
-            primary: { main: '#0F172A' }, // Blu Notte (Slate 900)
+            primary: { main: '#9ba8c5' }, // Blu Notte (Slate 900)
             secondary: { main: '#3B82F6' }, // Blu Elettrico (Blue 500)
             text: { primary: '#334155', secondary: '#64748B' },
             success: { main: '#10B981' }, // Verde smeraldo

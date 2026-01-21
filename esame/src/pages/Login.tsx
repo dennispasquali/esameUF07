@@ -5,8 +5,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IconButton } from "@mui/material";
 import Google_logo from "../assets/google_logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EmailValidation } from "../hooks/EmailValidation";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 function Login() {
 
     // const [email,setEmail]=useState<string>();
@@ -19,6 +21,7 @@ function Login() {
         
         
     };
+    const navigate = useNavigate();
 
 
 //     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -51,6 +54,12 @@ function Login() {
 //   };
     return (
        <>
+        <div>
+            <Button onClick={() => navigate("/home")} sx={{ mt: 3, fontWeight: 600, color: 'text.secondary' }}>
+                <ArrowBackIcon />
+        </Button>
+        </div>
+        
        <div className={style.form}>
         <div className={style.login_header}>
         <h2>Benvenuto</h2>

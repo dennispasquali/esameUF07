@@ -121,16 +121,16 @@
 }
 
 .price_large {
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 700;
-  color: #B12704; /* Rosso scuro per il prezzo nel box */
+  color: #1976D2; /* Rosso scuro per il prezzo nel box */
   margin-bottom: 10px;
 }
 
 .delivery_info {
   font-size: 14px;
   margin-bottom: 20px;
-  color: #007185;
+  color: #1976D2;
 }
 
 /* Selettore Quantità */

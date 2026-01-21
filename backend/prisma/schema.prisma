@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Nazione {
+  id     Int     @id @default(autoincrement())
+  nome   String
+  cittas Citta[]
+}
+
+model Citta {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  cap       String
+  idNazione Int
+  nazione   Nazione   @relation(fields: [idNazione], references: [id])
+  clientes  Cliente[]
+}
+
+model Utente {
+  id          Int          @id @default(autoincrement()) // Questo crea un ID seriale (1, 2, 3...)
+  nome        String
+  cognome     String
+  email       String       @unique // @unique impedisce di avere due utenti con la stessa email
+  pwd         String
+  dipendentes Dipendente[]
+  admins      Admin[]
+  clientes    Cliente[]
+  ordines     Ordine[]
+}
+
+model Dipendente {
+  id       Int    @id @default(autoincrement())
+  ruolo    String
+  mansione String
+  idUtente Int
+  utente   Utente @relation(fields: [idUtente], references: [id])
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  idUtente Int
+  utente   Utente @relation(fields: [idUtente], references: [id])
+}
+
+model Cliente {
+  id                 Int          @id @default(autoincrement())
+  prefissoTelefonico String
+  telfono            String
+  via                String
+  civico             Int
+  imgProfilo         String
+  idUtente           Int
+  utente             Utente       @relation(fields: [idUtente], references: [id])
+  idCitta            Int
+  citta              Citta        @relation(fields: [idCitta], references: [id])
+  recensiones        Recensione[]
+}
+
+model Prodotto {
+  id                 Int                 @id @default(autoincrement())
+  img                String
+  titolo             String
+  descrizione        String
+  prezzo             Float
+  prezzoVecchio      Float?
+  dataSpedizione     DateTime
+  recensiones        Recensione[]
+  ordiniConProdottis OrdiniConProdotti[]
+}
+
+model Recensione {
+  id          Int      @id @default(autoincrement())
+  idCliente   Int
+  cliente     Cliente  @relation(fields: [idCliente], references: [id])
+  idProdotto  Int
+  prodotto    Prodotto @relation(fields: [idProdotto], references: [id])
+  descrizione String
+  titolo      String
+  valutazione Float
+  data        DateTime
+}
+
+model Carosello {
+  id      Int     @id @default(autoincrement())
+  img     String
+  alt     String
+  caption String?
+}
+
+model Ordine {
+  id                 Int                 @id @default(autoincrement())
+  idUtente           Int
+  utente             Utente              @relation(fields: [idUtente], references: [id])
+  data               DateTime
+  //enum
+  //status: 'carrello' | 'Ricevuto' | 'In produzione' | 'Spedito' | 'Consegnato'
+  status             String              @default("carrello")
+  //enum
+  //statusColor: 'none' | 'default' | 'secondary' | 'success' | 'warning',
+  statusColor        String              @default("none")
+  urlTracking        String
+  tipoOrdine         String
+  ordiniConProdottis OrdiniConProdotti[]
+}
+
+model OrdiniConProdotti {
+  id         Int      @id @default(autoincrement())
+  qt         Int
+  idProdotto Int
+  prodotto   Prodotto @relation(fields: [idProdotto], references: [id])
+  idOrdine   Int
+  ordine     Ordine   @relation(fields: [idOrdine], references: [id])
+}

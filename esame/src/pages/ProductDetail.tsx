@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import style from "../PagesStyle/ProductDetail.module.css"; // Assicurati di creare questo file
-import { Rating, TextField } from "@mui/material";
+import { Alert, Rating, Snackbar, TextField } from "@mui/material";
 import Review from "../components/Review";
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add'
 import ReviewDialog from "../components/ReviewDialog";
 import Footer from "../components/Footer";
+import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+import type { IProductItem } from "../Interfaces/ProductItem";
+import { SnackBarCart } from "../hooks/SnackBarCart";
 function ProductDetail() {
 
   const reviews=[
@@ -106,7 +109,7 @@ function ProductDetail() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const productData = location.state;
+  const productData:IProductItem = location.state;
   const [openDialog,setOpenDialog]=useState(false);
 
 
@@ -118,8 +121,7 @@ function ProductDetail() {
     
     setOpenDialog(false);
   };
-  // Stato per la quantità selezionata
-  const [quantity] = useState(1);
+
 
   // 1. Gestione Redirect Sicuro: Se non ci sono dati, torna alla home
   useEffect(() => {
@@ -133,7 +135,7 @@ function ProductDetail() {
 
   const priceFixed=productData.price.toFixed(2);
   
-
+  const { openSnackBar, handleSnack} = SnackBarCart();
   
   return (
     <>
@@ -184,7 +186,7 @@ function ProductDetail() {
           {/* 3. La "Buy Box" (Colonna destra per l'acquisto) */}
           <div className={style.buy_box_col}>
             <div className={style.buy_box_card}>
-              <div className={style.price_large}>€ {priceFixed}</div>
+              <div className={style.price_large}>{priceFixed} €</div>
               
               <div className={style.delivery_info}>
                 Consegna GRATUITA <strong>domani</strong>.
@@ -207,10 +209,27 @@ function ProductDetail() {
               <div className={style.actions}>
                 <button 
                   className={`${style.btn} ${style['btn_primary']}`} 
-                  onClick={() => console.log(`Aggiunto al carrello: ${quantity} x ${productData.title}`)}
+                  onClick={handleSnack}
                 >
                   Aggiungi al carrello
                 </button>
+                <Snackbar
+                
+                          open={openSnackBar}
+                          autoHideDuration={1000}
+                          onClose={handleSnack}
+                 
+                        >
+                
+                
+                          <Alert
+                    onClose={handleSnack}
+                    severity="success"
+                    sx={{ width: '100%' }}
+                  >
+                    Prodotto aggiunto al carrello
+                  </Alert>
+                        </Snackbar>
                 
                 <button 
                   className={`${style.btn} ${style['btn_secondary']}`}
@@ -221,7 +240,7 @@ function ProductDetail() {
               </div>
               
               <div className={style.secure_transaction}>
-                🔒 Transazione sicura
+                <AssuredWorkloadIcon/> Transazione sicura
               </div>
             </div>
           </div>

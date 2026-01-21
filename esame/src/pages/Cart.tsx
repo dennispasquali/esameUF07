@@ -205,7 +205,17 @@ function Cart() {
             <div className={style.coupon_container}>
                 <h6>Hai un codice promozionale?</h6>
                 <div className={style.promotionCode_container}>
-                   c
+                    <TextField 
+                                size="small" 
+                                placeholder="Codice coupon" 
+                                fullWidth
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LocalOfferIcon fontSize="small" />
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                             <Button variant="outlined" sx={{ fontWeight: 600 }}>Applica</Button>
                   
