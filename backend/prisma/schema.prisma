@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -11,83 +10,88 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Nazione {
+model Nation {
   id     Int     @id @default(autoincrement())
-  nome   String
-  cittas Citta[]
+  name   String
+  cities City[]
 }
 
-model Citta {
+model City {
   id        Int       @id @default(autoincrement())
-  nome      String
+  name      String
   cap       String
-  idNazione Int
-  nazione   Nazione   @relation(fields: [idNazione], references: [id])
-  clientes  Cliente[]
+  idNation Int
+  nation   Nation   @relation(fields: [idNation], references: [id])
+  Customers  Customer[]
 }
 
-model Utente {
+model User {
   id          Int          @id @default(autoincrement()) // Questo crea un ID seriale (1, 2, 3...)
-  nome        String
-  cognome     String
+  name        String
+  surname     String
   email       String       @unique // @unique impedisce di avere due utenti con la stessa email
   pwd         String
-  dipendentes Dipendente[]
+  employees Employee[]
   admins      Admin[]
-  clientes    Cliente[]
-  ordines     Ordine[]
+  Customers    Customer[]
+  orders     Order[]
 }
 
-model Dipendente {
+model Employee {
   id       Int    @id @default(autoincrement())
-  ruolo    String
-  mansione String
-  idUtente Int
-  utente   Utente @relation(fields: [idUtente], references: [id])
+  role    String
+  task String
+  idUser Int
+  user   User @relation(fields: [idUser], references: [id])
 }
 
 model Admin {
   id       Int    @id @default(autoincrement())
-  idUtente Int
-  utente   Utente @relation(fields: [idUtente], references: [id])
+  idUser Int
+  user   User @relation(fields: [idUser], references: [id])
 }
 
-model Cliente {
+model Customer {
   id                 Int          @id @default(autoincrement())
-  prefissoTelefonico String
-  telfono            String
-  via                String
-  civico             Int
-  imgProfilo         String
-  idUtente           Int
-  utente             Utente       @relation(fields: [idUtente], references: [id])
-  idCitta            Int
-  citta              Citta        @relation(fields: [idCitta], references: [id])
-  recensiones        Recensione[]
+  phonePrefix         String
+  phoneNumber            String
+  street                String
+  civic             Int
+  imgProfile         String
+  idUser           Int
+  user             User       @relation(fields: [idUser], references: [id])
+  idCity            Int
+  city              City        @relation(fields: [idCity], references: [id])
+  reviews        Review[]
 }
 
-model Prodotto {
+model Product {
   id                 Int                 @id @default(autoincrement())
   img                String
-  titolo             String
-  descrizione        String
-  prezzo             Float
-  prezzoVecchio      Float?
-  dataSpedizione     DateTime
-  recensiones        Recensione[]
-  ordiniConProdottis OrdiniConProdotti[]
+  title             String
+  description        String
+  price             Float
+  qt            Int 
+  weigth        Float
+  heigth        Int
+  width         Int
+  length        Int
+  oldPrice      Float?
+  shippingDate     DateTime
+  reviews        Review[]
+  orderWithProducts OrderWithProducts[]
 }
 
-model Recensione {
+model Review {
   id          Int      @id @default(autoincrement())
-  idCliente   Int
-  cliente     Cliente  @relation(fields: [idCliente], references: [id])
-  idProdotto  Int
-  prodotto    Prodotto @relation(fields: [idProdotto], references: [id])
-  descrizione String
-  titolo      String
-  valutazione Float
-  data        DateTime
+  idCustomer   Int
+  customer     Customer  @relation(fields: [idCustomer], references: [id])
+  idProduct  Int
+  Product    Product @relation(fields: [idProduct], references: [id])
+  description String
+  title      String
+  rating Float
+  date        DateTime
 }
 
 model Carosello {
@@ -97,11 +101,11 @@ model Carosello {
   caption String?
 }
 
-model Ordine {
+model Order {
   id                 Int                 @id @default(autoincrement())
-  idUtente           Int
-  utente             Utente              @relation(fields: [idUtente], references: [id])
-  data               DateTime
+  idUser           Int
+  user             User              @relation(fields: [idUser], references: [id])
+  date               DateTime
   //enum
   //status: 'carrello' | 'Ricevuto' | 'In produzione' | 'Spedito' | 'Consegnato'
   status             String              @default("carrello")
@@ -109,15 +113,15 @@ model Ordine {
   //statusColor: 'none' | 'default' | 'secondary' | 'success' | 'warning',
   statusColor        String              @default("none")
   urlTracking        String
-  tipoOrdine         String
-  ordiniConProdottis OrdiniConProdotti[]
+  typeOrder        String
+  orderWithProducts OrderWithProducts[]
 }
 
-model OrdiniConProdotti {
+model OrderWithProducts {
   id         Int      @id @default(autoincrement())
   qt         Int
-  idProdotto Int
-  prodotto   Prodotto @relation(fields: [idProdotto], references: [id])
-  idOrdine   Int
-  ordine     Ordine   @relation(fields: [idOrdine], references: [id])
+  idProduct Int
+  product   Product @relation(fields: [idProduct], references: [id])
+  idOrder   Int
+  order     Order   @relation(fields: [idOrder], references: [id])
 }

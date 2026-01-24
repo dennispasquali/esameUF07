@@ -1,4 +1,4 @@
-import type { IReview } from "../Interfaces/Reviews";
+import type { IReview } from "../Interfaces/Review";
 import style from "../ComponentStyle/Review.module.css";
 import Rating from "@mui/material/Rating";
 
@@ -7,7 +7,7 @@ function Review(props: IReview) {
        
         <div className={style.review_container}>
             <div className={style.review_first_row}>
-              <img src={props.userAvatar}></img>
+              <img src={props.imgProfile}></img>
               <span>{props.userName}</span>
             </div>
             <div className={style.review_second_row}>
@@ -15,7 +15,7 @@ function Review(props: IReview) {
               <span className={style.title}>{props.title}</span>
             </div>
             <div>
-                <p className={style.date}>Reviewed on: {props.date}</p>
+                <p className={style.date}>Reviewed on: {new Date(props.date).toLocaleDateString('it-IT')}</p>
                 <p>{props.description}</p>
             </div>
             

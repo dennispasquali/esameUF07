@@ -1,46 +1,27 @@
-import express, { type Request, type Response } from 'express';
+// src/app.ts
+import express from 'express';
 import cors from 'cors';
+import prodottoRoutes from './routes/ProductRoutes';
+import { getImageData } from './controllers/CarouselController';
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
+// Middleware
+app.use(cors()); // Abilita richieste da frontend esterni
+app.use(express.json()); // Permette di leggere i JSON nel body delle richieste
 
-// 1. DEFINIAMO IL TIPO (Lo stesso che userai nel Frontend!)
-interface Order {
-  id: number;
-  title: string;
-  price: number;
-  status: 'pending' | 'shipped'; // Stringhe specifiche!
-}
+// Rotte
+app.use('/api/products', prodottoRoutes);
 
-// Dati finti tipizzati
-const orders: Order[] = [
-  { id: 1, title: "Biglietti", price: 45, status: 'pending' },
-  { id: 2, title: "Rollup", price: 80, status: 'shipped' }
-];
+app.get('/api/carousel',getImageData)
 
-// --- LE API ---
-
-// GET con i tipi
-app.get('/api/orders', (req: Request, res: Response) => {
-  res.json(orders);
+// Rotta di test base
+app.get('/', (req, res) => {
+  res.send('API Tipografia funzionanti 🚀');
 });
 
-// POST
-app.post('/api/orders', (req: Request, res: Response) => {
-  // TypeScript qui non sa cosa c'è in req.body, quindi facciamo un cast o validazione
-  const newOrder: Order = {
-    id: Date.now(),
-    title: req.body.title,
-    price: req.body.price,
-    status: 'pending'
-  };
-  
-  orders.push(newOrder);
-  res.json(newOrder);
-});
-
-app.listen(3001, () => {
-  console.log('Server TS attivo su http://localhost:3001');
+// Avvio server
+app.listen(PORT, () => {
+  console.log(`Server attivo su http://localhost:${PORT}`);
 });

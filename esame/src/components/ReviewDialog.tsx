@@ -18,9 +18,13 @@ function ReviewDialog({ isOpen, handleClose }: { isOpen: boolean, handleClose: (
     const triggerClose = (e: React.AnimationEvent) => {
         if (e.target !== e.currentTarget) return;
         if (!isOpen) {
-        setIsRendered(false); // ...ora rimuoviamo davvero l'HTML.
+        setIsRendered(false);
         }
     };
+
+    function handleSubmit() {
+
+    }
     if(!isRendered) {
         return null;
     } else {
@@ -32,7 +36,7 @@ function ReviewDialog({ isOpen, handleClose }: { isOpen: boolean, handleClose: (
               <img src={"https://i.pravatar.cc/150?img=5"}></img>
               <span>{"Dennis Pasquali"}</span>
             </div>
-            <p className={style.evaluation}>Give Your Evaluation: </p>
+            <p className={style.evaluation}>Dai la tua Valutazione: </p>
             <Rating
                 size="large"
                 className={style.rating}
@@ -44,7 +48,7 @@ function ReviewDialog({ isOpen, handleClose }: { isOpen: boolean, handleClose: (
             />
             <div className={style.title_textField}>
             <TextField
-            label="Title: "
+            label="Titolo: "
             rows={1}           // Altezza fissa di 4 righe
             variant="outlined"
             />
@@ -53,15 +57,15 @@ function ReviewDialog({ isOpen, handleClose }: { isOpen: boolean, handleClose: (
 
             <TextField
             className={style.textFieldArea}
-            label="Your Review: "
-            multiline          // <--- Questo lo trasforma in una textarea
+            label="La tua Recensione: "
+            multiline          
             rows={8}           // Altezza fissa di 4 righe
-            fullWidth          // Occupa tutta la larghezza
+            fullWidth          
             variant="outlined"
             />
 
             <Button className={style.buttons} onClick={handleClose} variant="contained">Annulla</Button>
-            <Button className={style.buttons} onClick={handleClose} variant="contained">Pubblica</Button>
+            <Button className={style.buttons} onClick={handleSubmit} variant="contained">Pubblica</Button>
 
             </div>
             

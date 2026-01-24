@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import style from "../PagesStyle/ProductDetail.module.css"; // Assicurati di creare questo file
-import { Alert, Rating, Snackbar, TextField } from "@mui/material";
+import { Alert, CircularProgress, Rating, Snackbar, TextField } from "@mui/material";
 import Review from "../components/Review";
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add'
@@ -11,119 +11,38 @@ import Footer from "../components/Footer";
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import type { IProductItem } from "../Interfaces/ProductItem";
 import { SnackBarCart } from "../hooks/SnackBarCart";
+import { FetchApiGet } from "../hooks/FetchApiGet";
+import type { IReview } from "../Interfaces/Review";
 function ProductDetail() {
 
-  const reviews=[
-  {
-    "id": 101,
-    "userName": "Giulia Bianchi",
-    "userAvatar": "https://i.pravatar.cc/150?img=5",
-    "title": "Assolutamente fantastico!",
-    "description": "Ho acquistato questo prodotto due settimane fa e non potrei essere più felice. La qualità costruttiva è eccellente e fa esattamente quello che promette. Spedizione velocissima, arrivato in 24 ore.",
-    "rating": 5,
-    "date": "2023-11-15"
-  },
-  {
-    "id": 102,
-    "userName": "Marco Esposito",
-    "userAvatar": "https://i.pravatar.cc/150?img=11",
-    "title": "Buono, ma con qualche difetto",
-    "description": "Il prodotto è valido e funziona bene, ma la batteria dura meno di quanto dichiarato. Per il resto nulla da dire, materiali solidi e design molto curato.",
-    "rating": 3,
-    "date": "2023-10-22"
-  },
-  {
-    "id": 103,
-    "userName": "Francesca Costa",
-    "userAvatar": "https://i.pravatar.cc/150?img=9",
-    "title": "Rapporto qualità-prezzo imbattibile",
-    "description": "Non credevo si potesse avere così tanto spendendo così poco. Consiglio vivamente a chi cerca un'alternativa economica ai marchi più blasonati.",
-    "rating": 5,
-    "date": "2023-12-05"
-  },
-  {
-    "id": 104,
-    "userName": "Alessandro Romano",
-    "userAvatar": "https://i.pravatar.cc/150?img=13",
-    "title": "Pessima esperienza",
-    "description": "Il pacco è arrivato danneggiato e il servizio clienti ha impiegato tre giorni per rispondermi. Il prodotto in sé sembra fragile. Chiesto il rimborso.",
-    "rating": 1,
-    "date": "2023-09-10"
-  },
-  {
-    "id": 105,
-    "userName": "Elena Ricci",
-    "userAvatar": "https://i.pravatar.cc/150?img=24",
-    "title": "Molto utile, ma istruzioni poco chiare",
-    "description": "Ho fatto fatica a configurarlo inizialmente perché il manuale è solo in inglese e scritto molto piccolo. Una volta capito come funziona, è diventato indispensabile.",
-    "rating": 4,
-    "date": "2024-01-02"
-  },
-  {
-    "id": 106,
-    "userName": "Davide Ferri",
-    "userAvatar": "https://i.pravatar.cc/150?img=33",
-    "title": "Soddisfatto a metà",
-    "description": "Esteticamente è bellissimo, ma tecnicamente mi aspettavo di più. A volte si blocca e devo riavviarlo. Spero in un aggiornamento software.",
-    "rating": 3,
-    "date": "2023-11-30"
-  },
-  {
-    "id": 107,
-    "userName": "Martina Gallo",
-    "userAvatar": "https://i.pravatar.cc/150?img=44",
-    "title": "Regalo perfetto",
-    "description": "Preso per il compleanno di mio marito, è rimasto contentissimo! La confezione regalo era molto curata. Grazie Amazon!",
-    "rating": 5,
-    "date": "2023-12-20"
-  },
-  {
-    "id": 108,
-    "userName": "Luca Moretti",
-    "userAvatar": "https://i.pravatar.cc/150?img=59",
-    "title": "Non compatibile con il mio sistema",
-    "description": "Attenzione: nella descrizione c'è scritto compatibile con tutti i sistemi, ma sul mio PC datato non viene riconosciuto. Ho dovuto fare il reso.",
-    "rating": 2,
-    "date": "2023-10-05"
-  },
-  {
-    "id": 109,
-    "userName": "Sara Vitali",
-    "userAvatar": "https://i.pravatar.cc/150?img=32",
-    "title": "Esattamente come in foto",
-    "description": "Spesso le foto ingannano, ma questo prodotto è fedele al 100%. Colore brillante e finiture perfette. Comprerò sicuramente altro da questo venditore.",
-    "rating": 5,
-    "date": "2024-01-15"
-  },
-  {
-    "id": 110,
-    "userName": "Giovanni De Luca",
-    "userAvatar": "https://i.pravatar.cc/150?img=68",
-    "title": "Fa il suo dovere",
-    "description": "Niente di eccezionale, un prodotto onesto per quello che costa. Lo uso quotidianamente senza problemi.",
-    "rating": 4,
-    "date": "2023-11-08"
-  }
-];
-
-
+  const FREE_SHIPPING_LIMIT_PRICE:number=50;
+  const PRICE_FOR_SHIPPING:string="15.00€";
   const location = useLocation();
   const navigate = useNavigate();
   const productData:IProductItem = location.state;
-  const [openDialog,setOpenDialog]=useState(false);
+  const [openDialog,setOpenDialog]=useState<boolean>(false);
+  const quantityRef = useRef<HTMLInputElement>(null);
+  const {data,error,loading}=FetchApiGet<IReview[]>(`http://localhost:3000/api/products/${productData.id}/reviews`);
 
+
+  console.log(productData);
+  let reviews:IReview[]=[];
+  if(data!==null) {
+    reviews=data;
+    console.log(data);
+  }
+ 
 
   const handleClickOpen = () => {
     setOpenDialog(true);
   };
 
   const handleClose = () => {
-    
     setOpenDialog(false);
   };
 
 
-  // 1. Gestione Redirect Sicuro: Se non ci sono dati, torna alla home
+  
   useEffect(() => {
     if (!productData) {
       navigate("/home");
@@ -137,6 +56,20 @@ function ProductDetail() {
   
   const { openSnackBar, handleSnack} = SnackBarCart();
   
+
+
+  function handleQuantityChange() {
+    if(quantityRef!=null && quantityRef.current!=null && quantityRef.current.value!==null) {
+      const val:number|null = parseInt(quantityRef.current.value);
+    if(val>productData.qt) {
+      quantityRef.current.value=String(productData.qt);
+    } else if(val<=0 || isNaN(val)) {
+      quantityRef.current.value=String(1);
+    }
+    }
+    
+  }
+
   return (
     <>
       <NavBar />
@@ -148,20 +81,21 @@ function ProductDetail() {
           
           {/* 1. Immagine */}
           <div className={style.product_image_col}>
-            <img src={productData.image} alt={productData.title} className={style.main_img} />
+            <img src={productData.img} alt={productData.title} className={style.main_img} />
           </div>
 
           {/* 2. Dettagli Centrali */}
           <div className={style.product_info_col}>
             <h1>{productData.title}</h1>
             
-            <div className={style.rating_row}>
-                <span>{productData.rating}</span>
+            {productData.rating!==null ? <div className={style.rating_row}>
+                <span>{productData.rating.toFixed(1)}</span>
               <span className={style.rating_count}>
                 <Rating name="read-only" value={productData.rating} precision={0.1} size="small" readOnly />
               </span>
               <span className={style.numberOfRatings}>({productData.numberOfRatings})</span>
-            </div>
+            </div>:  ""}
+            
 
             <hr className={style.separator} />
 
@@ -189,18 +123,21 @@ function ProductDetail() {
               <div className={style.price_large}>{priceFixed} €</div>
               
               <div className={style.delivery_info}>
-                Consegna GRATUITA <strong>domani</strong>.
+                Consegna {productData.price>FREE_SHIPPING_LIMIT_PRICE ? "GRATUITA" : PRICE_FOR_SHIPPING} <strong><br></br>Per il {new Date(productData.shippingDate).toLocaleDateString('it-IT')}</strong>.
                 <br />
-                Disponibilità immediata.
+                Disponibilità: {productData.qt} prodotti
               </div>
 
               {/* Selettore Quantità */}
               <div className={style.quantity_selector}>
                 <TextField
+                
+                inputRef={quantityRef}
+                onBlur={handleQuantityChange}
                 size="small"
                 label="Quantità"
                 type="number"
-                InputProps={{ inputProps: { min: 1} }} // Opzionale: limiti
+                InputProps={{ inputProps: { min: 1,max: productData.qt} }} // Opzionale: limiti
                 variant="outlined"
                 />
               </div>
@@ -247,11 +184,11 @@ function ProductDetail() {
         </div>
 
         {/* --- ZONA INFERIORE (Recensioni) --- */}
-        <div id={style.reviews_section}>
+        {productData.rating!==null? <div id={style.reviews_section}>
           <h2>Recensioni Clienti</h2>
-          
+              
             <div className={style.average_rating}>
-              <span className={style.big_score}>{productData.rating}</span>
+              <span className={style.big_score}>{productData.rating.toFixed(1)}</span>
               <div className={style.stars_wrapper}>
                 {<Rating name={"read-only"} value={productData.rating} precision={0.1} size="small" readOnly />}
               </div>
@@ -263,10 +200,11 @@ function ProductDetail() {
             </div>
             <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog>
               <div id={style.div_review}>
-                {reviews.map((review) => (
+                {loading || reviews===null? <CircularProgress className={style.loading}></CircularProgress> :  error!==null || reviews.length<=0? <p>Non ci sono recensioni</p> : reviews.map((review) => (
                   <Review 
+                    key={review.id}
                     id={review.id}
-                    userAvatar={review.userAvatar}
+                    imgProfile={review.imgProfile}
                     description={review.description} // Nuovo
                     title={review.title}
                     date={review.date}
@@ -274,11 +212,13 @@ function ProductDetail() {
                     rating={review.rating}
                     />
                 ))}
+                
             </div>
         </div>
 
-      </div>
-
+    :  <div className={style.rowEmptyReviews}><div> <h2>Recensioni Clienti</h2>  <p>Non ci sono recensioni</p></div> <span><Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Aggiungi Recensione</Button></span>  
+    <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog></div> }
+          </div> 
       <Footer/>
     </>
   );

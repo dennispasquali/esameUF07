@@ -1,6 +1,6 @@
 export interface ICarouselImage {
   id: number;
-  url: string;
+  img: string;
   alt: string;
   caption?: string; // Opzionale
 }

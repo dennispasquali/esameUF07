@@ -9,19 +9,21 @@ import { SnackBarCart } from "../hooks/SnackBarCart";
 type TProductItem = IProductItem & {
   reset: () => void;
 };
-function ProductItem({reset,id,image, title,description,rating,numberOfRatings,price,oldPrice}: TProductItem) {
+function ProductItem({reset,id,img,qt, title,description,rating,numberOfRatings,price,oldPrice,shippingDate}: TProductItem) {
     
     const { openSnackBar, handleSnack} = SnackBarCart();
     const navigate = useNavigate();
-    const productData ={
+    const productData :IProductItem={
             id,
-            image,
+            img,
             title,
             description,
             rating,
             numberOfRatings,
             price,
-            oldPrice
+            shippingDate,
+            oldPrice,
+            qt
     }
     // Funzione handler nominata (non anonima/lambda)
     function handleProductClick() {
@@ -36,7 +38,7 @@ function ProductItem({reset,id,image, title,description,rating,numberOfRatings,p
     <div className={style.product_card} >
       {/* 1. Immagine Prodotto */}
       <div className={style.product_image_container}>
-        <img src={image} alt={title} />
+        <img src={img} alt={title} />
       </div>
 
       {/* 2. Informazioni */}
