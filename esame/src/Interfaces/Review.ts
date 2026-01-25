@@ -1,7 +1,7 @@
 export interface IReview {
   id: number;
   userName: string;
-  imgProfile: string;
+  imgProfile?: string;
   title: string;
   description: string;
   rating: number; // Da 1 a 5

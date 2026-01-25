@@ -12,7 +12,7 @@ datasource db {
 
 model Nation {
   id     Int     @id @default(autoincrement())
-  name   String
+  name   String @unique
   cities City[]
 }
 
@@ -20,9 +20,10 @@ model City {
   id        Int       @id @default(autoincrement())
   name      String
   cap       String
-  idNation Int
+  idNation Int 
   nation   Nation   @relation(fields: [idNation], references: [id])
-  Customers  Customer[]
+  customers  Customer[]
+  @@unique([name, cap])
 }
 
 model User {
@@ -33,7 +34,7 @@ model User {
   pwd         String
   employees Employee[]
   admins      Admin[]
-  Customers    Customer[]
+  customers    Customer[]
   orders     Order[]
 }
 
@@ -41,26 +42,26 @@ model Employee {
   id       Int    @id @default(autoincrement())
   role    String
   task String
-  idUser Int
+  idUser Int @unique
   user   User @relation(fields: [idUser], references: [id])
 }
 
 model Admin {
   id       Int    @id @default(autoincrement())
-  idUser Int
+  idUser Int @unique
   user   User @relation(fields: [idUser], references: [id])
 }
 
 model Customer {
   id                 Int          @id @default(autoincrement())
-  phonePrefix         String
-  phoneNumber            String
+  phonePrefix         Int
+  phoneNumber            Int
   street                String
   civic             Int
-  imgProfile         String
-  idUser           Int
+  imgProfile         String?
+  idUser           Int @unique
   user             User       @relation(fields: [idUser], references: [id])
-  idCity            Int
+  idCity            Int 
   city              City        @relation(fields: [idCity], references: [id])
   reviews        Review[]
 }
@@ -84,9 +85,9 @@ model Product {
 
 model Review {
   id          Int      @id @default(autoincrement())
-  idCustomer   Int
+  idCustomer   Int 
   customer     Customer  @relation(fields: [idCustomer], references: [id])
-  idProduct  Int
+  idProduct  Int 
   Product    Product @relation(fields: [idProduct], references: [id])
   description String
   title      String
@@ -103,7 +104,7 @@ model Carosello {
 
 model Order {
   id                 Int                 @id @default(autoincrement())
-  idUser           Int
+  idUser           Int 
   user             User              @relation(fields: [idUser], references: [id])
   date               DateTime
   //enum
@@ -120,8 +121,8 @@ model Order {
 model OrderWithProducts {
   id         Int      @id @default(autoincrement())
   qt         Int
-  idProduct Int
+  idProduct Int 
   product   Product @relation(fields: [idProduct], references: [id])
-  idOrder   Int
+  idOrder   Int 
   order     Order   @relation(fields: [idOrder], references: [id])
 }

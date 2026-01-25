@@ -19,9 +19,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 function Home() {
   
-  const numberOfItemPerRow=10;
+  const NUMBER_OF_ITEM_PER_ROW=10;
   const { data, loading, error } = FetchApiGet<IProductItem[]>("http://localhost:3000/api/products");
-  const [endIndex,setEndIndex]=useState<number>(numberOfItemPerRow);
+  const [endIndex,setEndIndex]=useState<number>(NUMBER_OF_ITEM_PER_ROW);
   const [startIndex,setStartIndex]=useState<number>(0);
   const l=3;
   const newPages=useRef<number[]>([1,2,3]);
@@ -34,9 +34,9 @@ function Home() {
       const prodotti:IProductItem[]=data;
     
        function resetCurrentIndexes() {
-      let numberOfRow=(prodotti.length/numberOfItemPerRow)+1;
-  if(Number(((prodotti.length/numberOfItemPerRow) % 1).toFixed(2))===0.0 || (prodotti.length/numberOfItemPerRow)===0 && prodotti.length>=numberOfItemPerRow) {
-    numberOfRow=prodotti.length/numberOfItemPerRow;
+      let numberOfRow=(prodotti.length/NUMBER_OF_ITEM_PER_ROW)+1;
+  if(Number(((prodotti.length/NUMBER_OF_ITEM_PER_ROW) % 1).toFixed(2))===0.0 || (prodotti.length/NUMBER_OF_ITEM_PER_ROW)===0 && prodotti.length>=NUMBER_OF_ITEM_PER_ROW) {
+    numberOfRow=prodotti.length/NUMBER_OF_ITEM_PER_ROW;
   }
  
   
@@ -58,24 +58,24 @@ function Home() {
   
 
   const productSliced=prodotti.slice(startIndex,endIndex);
-  let numberOfRow=(prodotti.length/numberOfItemPerRow)+1;
-  if(Number(((prodotti.length/numberOfItemPerRow) % 1).toFixed(2))===0.0 || (prodotti.length/numberOfItemPerRow)===0 && prodotti.length>=numberOfItemPerRow) {
-    numberOfRow=prodotti.length/numberOfItemPerRow;
+  let numberOfRow=(prodotti.length/NUMBER_OF_ITEM_PER_ROW)+1;
+  if(Number(((prodotti.length/NUMBER_OF_ITEM_PER_ROW) % 1).toFixed(2))===0.0 || (prodotti.length/NUMBER_OF_ITEM_PER_ROW)===0 && prodotti.length>=NUMBER_OF_ITEM_PER_ROW) {
+    numberOfRow=prodotti.length/NUMBER_OF_ITEM_PER_ROW;
   }
   
 
   
 
   function sliceNext(val:number) {
-    val=val*numberOfItemPerRow
-    if(endIndex+val<=(numberOfRow)*numberOfItemPerRow && startIndex+val<=(numberOfRow-1)*numberOfItemPerRow) {
+    val=val*NUMBER_OF_ITEM_PER_ROW
+    if(endIndex+val<=(numberOfRow)*NUMBER_OF_ITEM_PER_ROW && startIndex+val<=(numberOfRow-1)*NUMBER_OF_ITEM_PER_ROW) {
       setEndIndex((endIndex+val));
       setStartIndex((startIndex+val));
 
           const startIndexL=startIndex+val;
-           if(numberOfRow-(startIndexL/numberOfItemPerRow)>3) {
+           if(numberOfRow-(startIndexL/NUMBER_OF_ITEM_PER_ROW)>3) {
             let index=0;
-           for (let i =startIndexL/numberOfItemPerRow; i <startIndexL/numberOfItemPerRow+l; i++) {
+           for (let i =startIndexL/NUMBER_OF_ITEM_PER_ROW; i <startIndexL/NUMBER_OF_ITEM_PER_ROW+l; i++) {
               newPages.current[index]=i+1;
               index++;
            }
@@ -93,15 +93,15 @@ function Home() {
   }
 
   function slicePrev(val:number) {
-    val=val*numberOfItemPerRow;
+    val=val*NUMBER_OF_ITEM_PER_ROW;
     if(endIndex-val>0 && startIndex-val>=0) {
       setEndIndex(endIndex=>endIndex-val);
       setStartIndex(startIndex=>startIndex-val);
        let endIndexL=endIndex-val;
-           if(endIndexL>=numberOfItemPerRow && endIndex<=((Math.trunc(numberOfRow)+1)*10)-30) {
+           if(endIndexL>=NUMBER_OF_ITEM_PER_ROW && endIndex<=((Math.trunc(numberOfRow)+1)*10)-30) {
             endIndexL=endIndex;
             let index=2;
-            for (let i =endIndexL/numberOfItemPerRow; i > (endIndexL/numberOfItemPerRow-l); i--) {
+            for (let i =endIndexL/NUMBER_OF_ITEM_PER_ROW; i > (endIndexL/NUMBER_OF_ITEM_PER_ROW-l); i--) {
               newPages.current[index]=i+1;
               index--;
             }
@@ -111,10 +111,10 @@ function Home() {
 
 
   function buttonChangePage(valButton:number) {
-    if((endIndex/numberOfItemPerRow)<valButton) {
-      sliceNext(valButton-(endIndex/numberOfItemPerRow));
+    if((endIndex/NUMBER_OF_ITEM_PER_ROW)<valButton) {
+      sliceNext(valButton-(endIndex/NUMBER_OF_ITEM_PER_ROW));
     } else {
-      slicePrev((endIndex/numberOfItemPerRow)-valButton);
+      slicePrev((endIndex/NUMBER_OF_ITEM_PER_ROW)-valButton);
     }
 
    
@@ -201,7 +201,7 @@ function Home() {
         </>
     ) 
 } else {
-  console.log(error);
+  console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
 }
 }
 export default Home

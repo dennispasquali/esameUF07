@@ -16,8 +16,8 @@ export const getProdotti = async (req: Request, res: Response) => {
       }
     });
 
-    if (!prodotti) {
-      return res.status(404).json({ error: 'Prodotti non trovati' });
+    if (prodotti.length===0) {
+      return res.status(404).send('Prodotti non trovati');
     }
 
     const risultato = prodotti.map((prodotto) => {
@@ -28,7 +28,11 @@ export const getProdotti = async (req: Request, res: Response) => {
         ratingSum+=review.rating;
     })
 
-    const rating:number=Number((ratingSum/numberOfRatings).toFixed(1));
+    let rating:number=0;
+    if(numberOfRatings>0) {
+      rating=Number((ratingSum/numberOfRatings).toFixed(1));
+    }
+    
     return {
         id: prodotto.id,
         title: prodotto.title,
@@ -49,7 +53,9 @@ export const getProdotti = async (req: Request, res: Response) => {
     
     res.json(risultato);
   } catch (error) {
-    res.status(500).json({ error: 'Errore nel recupero dei prodotti' });
+    const stringaDettaglio = error instanceof Error ? error.message : String(error);
+    console.error("Errore API Prodotti:", error);
+    res.status(500).send(stringaDettaglio);
   }
 };
 
@@ -72,19 +78,19 @@ export const getReviewsByProdottoId = async (req: Request, res: Response) => {
     });
     
      if(!prodotto) {
-       return res.status(404).json({ error: 'Prodotto non trovato' });
+       return res.status(404).send('Prodotto non trovato' );
     }
     const reviews=prodotto.reviews;
 
-    if(!reviews) {
-       return res.status(404).json({ error: 'Recensioni non trovate' });
+    if(reviews.length===0) {
+       return res.status(404).send('Recensioni non trovate' );
     }
 
 
     const risultato = reviews.map((review) => {
       
       if(!review.customer) {
-         return res.status(404).json({ error: 'Utente recensione non trovato' });
+         return res.status(404).send('Utente recensione non trovato');
       }
 
       const imgProfile=review.customer.imgProfile;
@@ -103,7 +109,9 @@ export const getReviewsByProdottoId = async (req: Request, res: Response) => {
 
     res.json(risultato);
   } catch (error) {
-    res.status(500).json({ error: 'Errore server' });
+    const stringaDettaglio = error instanceof Error ? error.message : String(error);
+    console.error("Errore API Prodotti:", error);
+    res.status(500).send(stringaDettaglio);
   }
 };
 
@@ -115,7 +123,7 @@ export const submitProductReview = async (req: Request, res: Response) =>{
   try {
     
     if (!idCliente || !idProdotto || !valutazione || !titolo || !valutazione || !descrizione) {
-      return res.status(400).json({ error: "Dati mancanti" });
+      return res.status(400).send("uno dei dati è mancante");
     }
 
     // 3. Creazione della recensione nel DB
@@ -131,7 +139,9 @@ export const submitProductReview = async (req: Request, res: Response) =>{
     })
  
 } catch(error) {
-    res.status(500).json({ error: 'Errore server' });
+    const stringaDettaglio = error instanceof Error ? error.message : String(error);
+    console.error("Errore API Prodotti:", error);
+    res.status(500).send(stringaDettaglio);
   }
 
 }

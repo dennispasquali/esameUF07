@@ -40,7 +40,7 @@ function Carousel() {
         return () => clearInterval(interval);
         }
        
-    }, [loading]);
+    }, [data]);
 
     
     if(!data && loading) {
@@ -104,7 +104,7 @@ function Carousel() {
 } else if(data!==null) {
         imagesData.current=data;
     } else {
-        console.error(error);
+        console.log("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
     }
 }
 

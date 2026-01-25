@@ -12,11 +12,13 @@ export const getImageData = async (req: Request, res: Response) => {
 
      });
      if(!imgData) {
-         return res.status(404).json({ error: 'Immagini carosello non trovate' });
+         return res.status(404).send('Immagini carosello non trovate');
      }
      res.json(imgData);
   } catch(error) {
-      res.status(500).json({ error: 'Errore nel recupero delle immagini carosello' });
-  }
+      const stringaDettaglio = error instanceof Error ? error.message : String(error);
+      console.error("Errore API Prodotti:", error);
+      res.status(500).send(stringaDettaglio);
+    }
 
 }

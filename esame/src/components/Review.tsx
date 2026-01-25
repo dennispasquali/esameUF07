@@ -7,7 +7,8 @@ function Review(props: IReview) {
        
         <div className={style.review_container}>
             <div className={style.review_first_row}>
-              <img src={props.imgProfile}></img>
+              {props.imgProfile?  <img src={props.imgProfile}></img>:""}
+              
               <span>{props.userName}</span>
             </div>
             <div className={style.review_second_row}>

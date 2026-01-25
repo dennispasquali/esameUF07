@@ -47,3 +47,7 @@
     display: flex; 
     gap: 10px
 }
+
+.loading{
+    margin-left: 50%;
+}

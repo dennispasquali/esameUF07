@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import style from "../PagesStyle/ProductDetail.module.css"; // Assicurati di creare questo file
@@ -68,6 +68,10 @@ function ProductDetail() {
     }
     }
     
+  }
+
+  if(error){
+     console.log("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
   }
 
   return (
@@ -200,7 +204,7 @@ function ProductDetail() {
             </div>
             <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog>
               <div id={style.div_review}>
-                {loading || reviews===null? <CircularProgress className={style.loading}></CircularProgress> :  error!==null || reviews.length<=0? <p>Non ci sono recensioni</p> : reviews.map((review) => (
+                {loading? <CircularProgress className={style.loading}></CircularProgress> :  error!==null && reviews.length===0? <p>Non ci sono recensioni</p> : error? "": reviews.map((review) => (
                   <Review 
                     key={review.id}
                     id={review.id}

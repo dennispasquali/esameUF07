@@ -3,25 +3,74 @@ import style from "../PagesStyle/Registration.module.css";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import { EmailValidation } from "../hooks/EmailValidation";
-
+import type { IRegistration } from "../Interfaces/Registration";
+import { useApiPost } from '../hooks/useApiPost';
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import { SnackBarCart } from "../hooks/SnackBarCart";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
-    const [password,setPwd]=useState<string>();
+    const [password,setPwd]=useState<string | null>(null);
     const { email, invalidEmailMessage, onChange } = EmailValidation();
     const [riconfermationPwd,setRiconfermationPwd]=useState<string>("");
     const [invalidRiconfermationMessage,setInvalidRiconfermationMessage]=useState<string>("");
-    const [telephoneNumber,setTelephoneNumber]=useState<string>("");
+    const [telephoneNumber,setTelephoneNumber]=useState<number>(0);
+    const [invalidTelephoneNumber,setInvalidTelephoneNumber]=useState<string>("");
     const [prefix,setPrefix]=useState<number | null>(39);
     const [name,setName]=useState<string>("");
     const [surname,setSurname]=useState<string>("");
     const [country,setCountry]=useState<string>("");
     const [street,setStreet]=useState<string>("");
-    const [civic,setCivic]=useState<number | null>();
+    const [civic,setCivic]=useState<number | null>(null);
     const [cap,setCap]=useState<string>("");
     const [city,setCity]=useState<string>("");
     const [invalidPrefix,setInvalidPrefix]=useState<string>("");
     const [invalidCivic,setInvalidCivic]=useState<string>("");
+    const [genericError,setGenericError]=useState<string | null>(null);
+    const { openSnackBar, handleSnack} = SnackBarCart();
+    
+  // 1. INIZIALIZZI LA HOOK
+  // Gli dici: "Punta a questa URL" e "Se va bene, aggiorna la lista 'prodotti'"
+  const { mutate, isPending } = useApiPost<IRegistration>('http://localhost:3000/api/registration/submit');
+  const navigate = useNavigate();
 
+
+   
+    function handleSubmit(e:React.FormEvent) {
+      e.preventDefault();
+      if(password===riconfermationPwd && invalidEmailMessage==="" && telephoneNumber!==0 && prefix!==null && name!=="" && surname!=="" && country!=="" && street!=="" && civic!==null && civic && cap!=="" && city!=="") {
+        const newUser={
+          name,
+          surname,
+          email,
+          password,
+          prefix,
+          telephoneNumber,
+          country,
+          city,
+          cap,
+          street,
+          civic,
+
+
+        } as IRegistration
+        mutate(newUser, {
+          onSuccess: (data) => {
+              console.log("Dati ricevuti nella callback:", data);
+              navigate('/home');
+          },
+          onError: (error) => {
+            console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+            setGenericError("Errore nel inviare i dati del form");
+        }
+          
+      });
+      } else {
+        setGenericError("Dati non validi nel form");
+      }
+    }
 
     function handlePrefix(prefix:string) {
         const n=Number(prefix);
@@ -34,6 +83,17 @@ function Registration() {
         }
 
             
+    }
+
+    function handleTelephoneNumber(tel:string) {
+       const n=Number(tel);
+        if(!Number.isNaN(n)) {
+          setTelephoneNumber(n);
+          setInvalidTelephoneNumber("");
+        } else {
+          setTelephoneNumber(0);
+          setInvalidTelephoneNumber("Numero di telefono non valido");
+        }
     }
 
     function handleCivic(c:string) {
@@ -74,7 +134,7 @@ function Registration() {
         <p>Fai il login nel tuo account</p>
        </div>
        
-       <form>
+       <form onSubmit={(e) =>handleSubmit(e)}>
 
         <div className={style.form_group}>
           <label>Nome:</label>
@@ -174,10 +234,10 @@ function Registration() {
           label="Required"
           type="text" 
             value={telephoneNumber} 
-            onChange={(e) => setTelephoneNumber(e.target.value)} 
+            onChange={(e) => handleTelephoneNumber(e.target.value)} 
         
         />
-          
+         {invalidTelephoneNumber!="" && <span className={style.invalidLabel}>{invalidTelephoneNumber}</span>} 
         </div>
 
         </div>
@@ -267,12 +327,24 @@ function Registration() {
 
         <div  className={style.loginButton}>
 
-             <Button type="submit" variant="contained">Registrati</Button>
+             <Button onClick={handleSnack} type="submit" variant="contained">Registrati</Button>
         </div>
       </form>
        </div>
+
+       {genericError ?
+      <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleSnack}>
+         <Alert  onClose={handleSnack} severity="error"> {genericError}</Alert>
+        
+      </Snackbar> :""}
+
+
+      {isPending? <CircularProgress className={style.loading}></CircularProgress>: ""}
+    
         </>
     )
 }
 
 export default Registration
+
+

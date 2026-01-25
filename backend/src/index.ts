@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import prodottoRoutes from './routes/ProductRoutes';
 import { getImageData } from './controllers/CarouselController';
+import { registerNewUser } from './controllers/RegistrationController';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,8 @@ app.get('/', (req, res) => {
   res.send('API Tipografia funzionanti 🚀');
 });
 
+
+app.post('/api/registration/submit',registerNewUser);
 // Avvio server
 app.listen(PORT, () => {
   console.log(`Server attivo su http://localhost:${PORT}`);
