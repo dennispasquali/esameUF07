@@ -1,57 +1,55 @@
 
-import { useState, type FormEvent} from "react"
+import { useState} from "react"
 import style from "../PagesStyle/Login.module.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { IconButton } from "@mui/material";
+import { Alert, CircularProgress, IconButton, Snackbar } from "@mui/material";
 import Google_logo from "../assets/google_logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { EmailValidation } from "../hooks/EmailValidation";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useApiPost } from "../hooks/useApiPost";
+import type { ILogin } from "../Interfaces/Login";
+import { SnackBarCart } from "../hooks/SnackBarCart";
+import type {IUserJWT} from "../Interfaces/UserJWT.ts";
+
 
 function Login() {
 
-    // const [email,setEmail]=useState<string>();
-    // const [invalidEmailMessage,setInvalidEmailMessage]=useState<string>("");
-    const [password,setPwd]=useState<string>();
+    const { mutate, isPending } = useApiPost<ILogin,IUserJWT>('http://localhost:3000/api/login/submit');
+    const [password,setPwd]=useState<string>("");
+    const [genericError,setGenericError]=useState<string>("");
     const { email, invalidEmailMessage, onChange } = EmailValidation();
-    const handleSubmit = (e:FormEvent<HTMLFormElement>) : void => {
-            e.preventDefault(); // Impedisce il ricaricamento della pagina
-            console.log("Dati inviati:", { email, password });
-        
-        
-    };
+    const { openSnackBar, handleSnack} = SnackBarCart();
     const navigate = useNavigate();
 
 
-//     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
-//         const email:string=e.target.value;
-        
-//         let nrAt=0;
-//         let nrPoint=0;
-//         //nr @
-//         let indexAt=0;
-//         let indexPoint=0;
-//         for (let i = 0; i < email.length; i++) {
-//             if(email.charAt(i)==='@') {
-//                 nrAt++;
-//                 indexAt=i;
-//             } else if(email.charAt(i)=='.') {
-//                 nrPoint++;
-//                 indexPoint=i;
-
-//             }
-            
-//         }
-
-//         if(nrAt===1 && nrPoint===1 && indexAt>0 && indexPoint-indexAt>1 && email.length-indexPoint>1 && email.substring(indexAt+1,indexPoint).trim()!="") {
-//             setEmail(e.target.value);
-//             setInvalidEmailMessage("");
-//         } else {
-//             setEmail(e.target.value);
-//             setInvalidEmailMessage("email non valida");
-//         }
-//   };
+function handleGoogleLogin() {
+    window.location.href = 'http://localhost:3000/auth/google';
+  };
+    
+function handleLogin(e:React.FormEvent) {
+      e.preventDefault();
+      if(password!="" && email !="") {
+        const user={
+          email,
+          password,
+        } as ILogin
+        mutate(user, {
+          onSuccess: (data) => {
+              console.log("Registrazione effettuata", data);
+              navigate('/home');
+          },
+          onError: (error) => {
+            console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+            setGenericError("Errore nel inviare i dati del form "+error?.details);
+        }
+          
+      });
+      } else {
+        setGenericError("Dati non validi nel form");
+      }
+    }
     return (
        <>
         <div>
@@ -65,8 +63,7 @@ function Login() {
         <h2>Benvenuto</h2>
         <p>Fai il login nel tuo account</p>
        </div>
-       
-       <form  onSubmit={handleSubmit}>
+        {isPending===true? <CircularProgress className={style.loading}></CircularProgress>: <form  onSubmit={(e)=>handleLogin(e)}>
         
         <div className={style.form_group}>
           <label>Email:</label>
@@ -98,7 +95,7 @@ function Login() {
 
         <div  className={style.loginButton}>
 
-             <Button type="submit" variant="contained">Login</Button>
+             <Button onClick={handleSnack} type="submit" variant="contained">Login</Button>
         </div>
         <div className={style.divider}>
             <span>oppure continua con</span>
@@ -106,7 +103,7 @@ function Login() {
 
       
         <div className={style.social_login}>
-            <IconButton>
+            <IconButton onClick={handleGoogleLogin}>
                 <img src={Google_logo}></img>
                 <span>Google</span>
             </IconButton>
@@ -115,9 +112,14 @@ function Login() {
       
       
        
-      </form>
+      </form>}
+        
        </div>
-       
+       {genericError ?
+             <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleSnack}>
+                <Alert  onClose={handleSnack} severity="error"> {genericError}</Alert>
+               
+             </Snackbar> :""}
        </> 
     )
 }

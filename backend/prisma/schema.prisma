@@ -32,6 +32,7 @@ model User {
   surname     String
   email       String       @unique // @unique impedisce di avere due utenti con la stessa email
   pwd         String
+  googleId  String?  @unique
   employees Employee[]
   admins      Admin[]
   customers    Customer[]
@@ -54,10 +55,10 @@ model Admin {
 
 model Customer {
   id                 Int          @id @default(autoincrement())
-  phonePrefix         Int
-  phoneNumber            Int
+  phonePrefix         BigInt
+  phoneNumber            BigInt
   street                String
-  civic             Int
+  civic             BigInt
   imgProfile         String?
   idUser           Int @unique
   user             User       @relation(fields: [idUser], references: [id])
@@ -72,11 +73,11 @@ model Product {
   title             String
   description        String
   price             Float
-  qt            Int 
+  qt            BigInt 
   weigth        Float
-  heigth        Int
-  width         Int
-  length        Int
+  heigth        BigInt
+  width         BigInt
+  length        BigInt
   oldPrice      Float?
   shippingDate     DateTime
   reviews        Review[]
@@ -120,7 +121,7 @@ model Order {
 
 model OrderWithProducts {
   id         Int      @id @default(autoincrement())
-  qt         Int
+  qt         BigInt
   idProduct Int 
   product   Product @relation(fields: [idProduct], references: [id])
   idOrder   Int 

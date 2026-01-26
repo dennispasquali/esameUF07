@@ -10,7 +10,7 @@ import Home from './pages/Home';
 import Company from './pages/Company';
 import Registration from './pages/Registration';
 import Cart from './pages/Cart';
-
+import GoogleCallback from './pages/GoogleCallback';
 
 function App() {
 
@@ -29,6 +29,7 @@ function App() {
             <Route path='/registration' element={<Registration/>}></Route>
             <Route path='/cart' element={<Cart/>}></Route>
             <Route path='/home/productDetail/:id' element={<ProductDetail/>}></Route>
+            <Route path='/google-success' element={<GoogleCallback/>}></Route>
             <Route path='*' element={<PageNotFound/>}></Route>
         </Routes>
     </BrowserRouter>

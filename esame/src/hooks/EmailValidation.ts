@@ -28,7 +28,7 @@ export const EmailValidation = () :IEmailValidation => {
             
         }
         setEmail(email);
-        if(nrAt===1 && nrPoint===1 && indexAt>0 && indexPoint-indexAt>1 && email.length-indexPoint>1 && email.substring(indexAt+1,indexPoint).trim()!="") {
+        if(nrAt===1 && nrPoint>=1 && indexAt>0 && indexPoint-indexAt>1 && email.length-indexPoint>1 && email.substring(indexAt+1,indexPoint).trim()!="") {
             setInvalidEmailMessage("");
         } else {
             setInvalidEmailMessage("email non valida");

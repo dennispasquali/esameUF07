@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
@@ -56,7 +57,19 @@ export const registerNewUser = async (req: Request, res: Response) => {
             }
         });
 
-        res.status(201).json({ message: "Successo", userId: newUser.id });
+        const token = jwt.sign(
+        { id: newUser.id.toString(), email: newUser.email }, 
+        process.env.JWT_SECRET!, 
+        { expiresIn: '24h' }
+    );
+
+    const { pwd, ...userWithoutPassword } = newUser;
+
+    return res.status(201).json({
+        message: "Registrazione completata",
+        token: token,
+        user: userWithoutPassword
+    });
 
     } catch(error: any) {
         const stringaDettaglio = error instanceof Error ? error.message : String(error);

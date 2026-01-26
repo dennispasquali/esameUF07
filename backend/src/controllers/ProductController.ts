@@ -2,6 +2,10 @@
 import { Request, Response } from 'express';
 import prisma from '../prisma';
 import { title } from 'node:process';
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 export const getProdotti = async (req: Request, res: Response) => {
   try {
   

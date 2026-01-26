@@ -19,7 +19,8 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "surname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "pwd" TEXT NOT NULL
+    "pwd" TEXT NOT NULL,
+    "googleId" TEXT
 );
 
 -- CreateTable
@@ -41,10 +42,10 @@ CREATE TABLE "Admin" (
 -- CreateTable
 CREATE TABLE "Customer" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "phonePrefix" INTEGER NOT NULL,
-    "phoneNumber" INTEGER NOT NULL,
+    "phonePrefix" BIGINT NOT NULL,
+    "phoneNumber" BIGINT NOT NULL,
     "street" TEXT NOT NULL,
-    "civic" INTEGER NOT NULL,
+    "civic" BIGINT NOT NULL,
     "imgProfile" TEXT,
     "idUser" INTEGER NOT NULL,
     "idCity" INTEGER NOT NULL,
@@ -59,11 +60,11 @@ CREATE TABLE "Product" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "price" REAL NOT NULL,
-    "qt" INTEGER NOT NULL,
+    "qt" BIGINT NOT NULL,
     "weigth" REAL NOT NULL,
-    "heigth" INTEGER NOT NULL,
-    "width" INTEGER NOT NULL,
-    "length" INTEGER NOT NULL,
+    "heigth" BIGINT NOT NULL,
+    "width" BIGINT NOT NULL,
+    "length" BIGINT NOT NULL,
     "oldPrice" REAL,
     "shippingDate" DATETIME NOT NULL
 );
@@ -104,7 +105,7 @@ CREATE TABLE "Order" (
 -- CreateTable
 CREATE TABLE "OrderWithProducts" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "qt" INTEGER NOT NULL,
+    "qt" BIGINT NOT NULL,
     "idProduct" INTEGER NOT NULL,
     "idOrder" INTEGER NOT NULL,
     CONSTRAINT "OrderWithProducts_idProduct_fkey" FOREIGN KEY ("idProduct") REFERENCES "Product" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -112,10 +113,16 @@ CREATE TABLE "OrderWithProducts" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Nation_name_key" ON "Nation"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "City_name_cap_key" ON "City"("name", "cap");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_googleId_key" ON "User"("googleId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Employee_idUser_key" ON "Employee"("idUser");

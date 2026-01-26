@@ -10,6 +10,8 @@ import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { SnackBarCart } from "../hooks/SnackBarCart";
 import { useNavigate } from "react-router-dom";
+import type {IUserJWT} from "../Interfaces/UserJWT";
+
 
 function Registration() {
     const [password,setPwd]=useState<string | null>(null);
@@ -33,7 +35,7 @@ function Registration() {
     
   // 1. INIZIALIZZI LA HOOK
   // Gli dici: "Punta a questa URL" e "Se va bene, aggiorna la lista 'prodotti'"
-  const { mutate, isPending } = useApiPost<IRegistration>('http://localhost:3000/api/registration/submit');
+  const { mutate, isPending } = useApiPost<IRegistration,IUserJWT>('http://localhost:3000/api/registration/submit');
   const navigate = useNavigate();
 
 
@@ -59,11 +61,15 @@ function Registration() {
         mutate(newUser, {
           onSuccess: (data) => {
               console.log("Dati ricevuti nella callback:", data);
+              localStorage.setItem('token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
+
+              // setAuth({ token: data.token, user: data.user });
               navigate('/home');
           },
           onError: (error) => {
             console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
-            setGenericError("Errore nel inviare i dati del form");
+            setGenericError("Errore nel inviare i dati del form "+error?.message);
         }
           
       });
@@ -267,7 +273,7 @@ function Registration() {
           required
           id="outlined-required"
           label="Required"
-          type="text" 
+          type="text"
             value={city} 
             onChange={(e) => setCity(e.target.value)} 
         

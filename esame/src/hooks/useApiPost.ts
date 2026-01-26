@@ -1,21 +1,18 @@
-// api/productsApi.ts
-
 import { useMutation } from "@tanstack/react-query";
 import type { ApiError } from "../Interfaces/ApiError";
 
 
-async function postCall<T>(url:string, content:T) :Promise<string>{
+async function postCall<Tin,Tout>(url:string, content:Tin) :Promise<Tout>{
     try {
          const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json', // Fondamentale per il backend!
+      'Content-Type': 'application/json', 
     },
     body: JSON.stringify(content),
   });
 
   if (!response.ok) {
-    // Qui riutilizziamo la logica per estrarre l'errore dal backend
     const textBody = await response.text();
      let cleanDetails = textBody;
           try {
@@ -33,7 +30,7 @@ async function postCall<T>(url:string, content:T) :Promise<string>{
           } as ApiError;
     }
 
-    return await response.text() as string;
+    return await response.json() as Tout;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err:any) {
         if (err.status !== undefined && err.details !== undefined) {
@@ -51,10 +48,10 @@ async function postCall<T>(url:string, content:T) :Promise<string>{
 }
  
 
-export function useApiPost<T>(url:string) {
+export function useApiPost<Tin,Tout>(url:string) {
 
-  return useMutation<string,ApiError,T>({
-    mutationFn: (content) => postCall<T>(url, content), // Passi solo la funzione, React Query fa il resto
+  return useMutation<Tout,ApiError,Tin>({
+    mutationFn: (content) => postCall<Tin,Tout>(url, content), // Passi solo la funzione, React Query fa il resto
 });
 }
 
