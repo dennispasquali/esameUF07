@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ApiError } from "../Interfaces/ApiError";
 
-export function FetchApiGet<T>(url:string) {
+export function useFetchApiGet<T>(url:string,token?: string | null) {
     const [data,setData]=useState<T | null>(null);
     const [loading,setLoading]=useState<boolean>(true);
     const [error,setError]=useState<ApiError | null>(null);
@@ -12,7 +12,17 @@ export function FetchApiGet<T>(url:string) {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(url);
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+        };
+
+        if(token) {
+          headers['Authorization']=`Bearer ${token}`;
+        }
+        const response = await fetch(url ,{
+          method: 'GET',
+          headers: headers
+        });
         
         if (!response.ok) {
          // 1. Recuperiamo il body (qualsiasi cosa sia) come testo
@@ -52,7 +62,7 @@ export function FetchApiGet<T>(url:string) {
 
     fetchData();
 
-  }, [url]);
+  }, [url,token]);
 
   return { data, loading, error };
 }

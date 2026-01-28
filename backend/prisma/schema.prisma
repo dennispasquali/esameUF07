@@ -32,6 +32,7 @@ model User {
   surname     String
   email       String       @unique // @unique impedisce di avere due utenti con la stessa email
   pwd         String
+  imgProfile         String?
   googleId  String?  @unique
   employees Employee[]
   admins      Admin[]
@@ -59,7 +60,6 @@ model Customer {
   phoneNumber            BigInt
   street                String
   civic             BigInt
-  imgProfile         String?
   idUser           Int @unique
   user             User       @relation(fields: [idUser], references: [id])
   idCity            Int 
@@ -111,9 +111,6 @@ model Order {
   //enum
   //status: 'carrello' | 'Ricevuto' | 'In produzione' | 'Spedito' | 'Consegnato'
   status             String              @default("carrello")
-  //enum
-  //statusColor: 'none' | 'default' | 'secondary' | 'success' | 'warning',
-  statusColor        String              @default("none")
   urlTracking        String
   typeOrder        String
   orderWithProducts OrderWithProducts[]
@@ -121,9 +118,11 @@ model Order {
 
 model OrderWithProducts {
   id         Int      @id @default(autoincrement())
-  qt         BigInt
+  qt         Int
+  priceAtPurchase Int
   idProduct Int 
   product   Product @relation(fields: [idProduct], references: [id])
   idOrder   Int 
   order     Order   @relation(fields: [idOrder], references: [id])
+  @@unique([idOrder, idProduct])
 }

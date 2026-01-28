@@ -21,12 +21,12 @@ export const login = async (req: Request, res: Response) => {
         });
 
         if(!user) {
-            return res.status(401).send('email e pwd non corretti');
+            return res.status(401).send('email o pwd non corretti');
         }
         const isPasswordValid = await bcrypt.compare(body.password, user.pwd);
 
         if(!isPasswordValid) {
-            return res.status(401).send('email e pwd non corretti');
+            return res.status(401).send('email o pwd non corretti');
         }
 
         const token = jwt.sign(
@@ -50,3 +50,4 @@ export const login = async (req: Request, res: Response) => {
         res.status(500).send("Errore interno: " + stringaDettaglio);
     }
 }
+

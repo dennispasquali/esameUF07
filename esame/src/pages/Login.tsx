@@ -31,19 +31,23 @@ function handleGoogleLogin() {
 function handleLogin(e:React.FormEvent) {
       e.preventDefault();
       if(password!="" && email !="") {
+        setGenericError("");
         const user={
           email,
           password,
         } as ILogin
         mutate(user, {
           onSuccess: (data) => {
-              console.log("Registrazione effettuata", data);
+              console.log("Login effettuato", data);
+              setGenericError("");
+              localStorage.setItem('token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
               navigate('/home');
           },
           onError: (error) => {
             console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
             setGenericError("Errore nel inviare i dati del form "+error?.details);
-        }
+         }
           
       });
       } else {
@@ -115,7 +119,7 @@ function handleLogin(e:React.FormEvent) {
       </form>}
         
        </div>
-       {genericError ?
+       {genericError!="" ?
              <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleSnack}>
                 <Alert  onClose={handleSnack} severity="error"> {genericError}</Alert>
                

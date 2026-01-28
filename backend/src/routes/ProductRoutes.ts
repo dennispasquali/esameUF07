@@ -11,6 +11,6 @@ router.get('/', getProdotti);
 router.get('/:id/reviews', getReviewsByProdottoId);
 
 // POST http://localhost:3000/api/products/1/reviews/submit
-router.post('/.id/reviews/submit', submitProductReview);
+router.post('/:id/reviews/submit', submitProductReview);
 
 export default router;

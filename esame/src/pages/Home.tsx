@@ -6,7 +6,7 @@ import ProductItem from "../components/ProductItem";
 import style from "../PagesStyle/Home.module.css";
 import Button from "@mui/material/Button";
 import Footer from "../components/Footer";
-import { FetchApiGet } from "../hooks/FetchApiGet";
+import { useFetchApiGet } from "../hooks/useFetchApiGet";
 import type { IProductItem } from "../Interfaces/ProductItem";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -20,7 +20,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 function Home() {
   
   const NUMBER_OF_ITEM_PER_ROW=10;
-  const { data, loading, error } = FetchApiGet<IProductItem[]>("http://localhost:3000/api/products");
+  const { data, loading, error } = useFetchApiGet<IProductItem[]>("http://localhost:3000/api/products");
   const [endIndex,setEndIndex]=useState<number>(NUMBER_OF_ITEM_PER_ROW);
   const [startIndex,setStartIndex]=useState<number>(0);
   const l=3;

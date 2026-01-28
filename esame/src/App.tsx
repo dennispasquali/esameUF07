@@ -30,7 +30,7 @@ function App() {
             <Route path='/cart' element={<Cart/>}></Route>
             <Route path='/home/productDetail/:id' element={<ProductDetail/>}></Route>
             <Route path='/google-success' element={<GoogleCallback/>}></Route>
-            <Route path='*' element={<PageNotFound/>}></Route>
+            <Route path='/*' element={<PageNotFound/>}></Route>
         </Routes>
     </BrowserRouter>
 

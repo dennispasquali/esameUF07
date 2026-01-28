@@ -1,6 +1,7 @@
 export interface IReview {
   id: number;
-  userName: string;
+  name: string;
+  surname:string;
   imgProfile?: string;
   title: string;
   description: string;

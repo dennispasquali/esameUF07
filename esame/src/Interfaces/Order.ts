@@ -1,12 +1,33 @@
-export interface IOrder {
-  id: number, 
-  date: string, 
-  title: string, 
-  price: number,
-  status: string, 
-  statusColor: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
-  url: string,
-  alt: string,
-  quantity: number,
 
-}
+export interface IOrder {
+orderWithProducts: ({
+        product: {
+            id: number;
+            length: bigint;
+            qt: bigint;
+            img: string;
+            title: string;
+            description: string;
+            price: number;
+            weigth: number;
+            heigth: bigint;
+            width: bigint;
+            oldPrice: number | null;
+            shippingDate: Date;
+        };
+    } & {
+        id: number;
+        qt: number;
+        idProduct: number;
+        idOrder: number;
+    })[];
+
+
+    id: number;
+    idUser: number;
+    date: Date;
+    status: string;
+    urlTracking: string;
+    typeOrder: string;
+}  
+    

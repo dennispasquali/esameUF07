@@ -15,8 +15,8 @@ export const registerNewUser = async (req: Request, res: Response) => {
             return res.status(400).send('Dati obbligatori mancanti');
         }
 
+        
         const hashedPassword = await bcrypt.hash(body.password, 10);
-
         const newUser = await prisma.user.create({
             data: {
                 email: body.email,

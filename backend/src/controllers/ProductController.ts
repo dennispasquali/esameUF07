@@ -97,16 +97,17 @@ export const getReviewsByProdottoId = async (req: Request, res: Response) => {
          return res.status(404).send('Utente recensione non trovato');
       }
 
-      const imgProfile=review.customer.imgProfile;
-      const userName=review.customer.user.name+" "+review.customer.user.surname;
+      const imgProfile=review.customer.user.imgProfile;
       return {
         id: review.id,
+        customerId: review.customer.user.id,
         title: review.title,
         description: review.description,
         rating: review.rating,
         date: review.date,
         imgProfile,
-        userName,
+        name:review.customer.user.name,
+        surname: review.customer.user.surname
 
       }
     })
@@ -122,26 +123,32 @@ export const getReviewsByProdottoId = async (req: Request, res: Response) => {
 export const submitProductReview = async (req: Request, res: Response) =>{
 
  
-  const { idCliente, idProdotto, titolo, descrizione, valutazione } = req.body;
+  const {userId, productId, title, rating,description,date} = req.body;
 
   try {
     
-    if (!idCliente || !idProdotto || !valutazione || !titolo || !valutazione || !descrizione) {
+    if (!userId || !productId || !title || !rating || !description || !date) {
       return res.status(400).send("uno dei dati è mancante");
     }
 
     // 3. Creazione della recensione nel DB
+    
+    const idCustomer=await prisma.customer.findUnique({
+        where: { idUser: Number(userId)},
+    })
+
     const nuovaRecensione = await prisma.review.create({
       data: {
-        idCustomer: Number(idCliente),   
-        idProduct: Number(idProdotto),
-        title: titolo,
-        description: descrizione,
-        rating: Number(valutazione),
-        date: new Date() 
+        idCustomer: Number(idCustomer?.id),
+        idProduct: Number(productId),
+        title: title,
+        description: description,
+        rating: Number(rating),
+        date: date,
       }
     })
- 
+
+    return res.status(201).json("recensione inviata");
 } catch(error) {
     const stringaDettaglio = error instanceof Error ? error.message : String(error);
     console.error("Errore API Prodotti:", error);

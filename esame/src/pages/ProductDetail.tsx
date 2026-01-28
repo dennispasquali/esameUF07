@@ -11,8 +11,10 @@ import Footer from "../components/Footer";
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import type { IProductItem } from "../Interfaces/ProductItem";
 import { SnackBarCart } from "../hooks/SnackBarCart";
-import { FetchApiGet } from "../hooks/FetchApiGet";
+import { useFetchApiGet } from "../hooks/useFetchApiGet";
 import type { IReview } from "../Interfaces/Review";
+import type {IUserProfile } from "../Interfaces/UserJWT";
+import type { IReviewDialog } from "../Interfaces/ReviewDialog";
 function ProductDetail() {
 
   const FREE_SHIPPING_LIMIT_PRICE:number=50;
@@ -22,8 +24,13 @@ function ProductDetail() {
   const productData:IProductItem = location.state;
   const [openDialog,setOpenDialog]=useState<boolean>(false);
   const quantityRef = useRef<HTMLInputElement>(null);
-  const {data,error,loading}=FetchApiGet<IReview[]>(`http://localhost:3000/api/products/${productData.id}/reviews`);
-
+  const {data,error,loading}=useFetchApiGet<IReview[]>(`http://localhost:3000/api/products/${productData.id}/reviews`);
+  const [userData,setUserData]=useState<IReviewDialog | null>(null);
+  const [addReviewError,setAddReviewError]=useState<string>("");
+  const token:string |null=localStorage.getItem('token');
+    const { openSnackBar, handleSnack} = SnackBarCart();
+      const { openSnackBar:openSnackBarCart, handleSnack:handleSnackBarCart} = SnackBarCart();
+  const {error: errorV,data :dataV}= useFetchApiGet<IUserProfile>("http://localhost:3000/api/login/verify",token);
 
   console.log(productData);
   let reviews:IReview[]=[];
@@ -31,10 +38,35 @@ function ProductDetail() {
     reviews=data;
     console.log(data);
   }
- 
+  
 
   const handleClickOpen = () => {
-    setOpenDialog(true);
+    
+    if(localStorage.getItem('token')!=null && dataV!=null) {
+      if(dataV) {
+        //metto id prodottto nei dati da passare al backend cosi quando reviewDialog glieli manda sa a che prodotto collegare la recensione
+        const dataToPass:IReviewDialog={
+          id:-1,
+          name:dataV.name,
+          surname:dataV.surname,
+          email:dataV.email,
+          imgProfile:dataV.imgProfile,
+          userId:dataV.id,
+          productId:productData.id
+
+        }
+        setUserData(dataToPass);
+        setOpenDialog(true);
+      } else {
+       console.error("code: "+errorV?.status+" message: "+errorV?.message+" details: "+errorV?.details);
+       setAddReviewError(""+errorV?.details);
+       handleSnack();
+      }
+    } else {
+      setAddReviewError("devi prima registrarti");
+      handleSnack();
+    }
+    
   };
 
   const handleClose = () => {
@@ -54,7 +86,7 @@ function ProductDetail() {
 
   const priceFixed=productData.price.toFixed(2);
   
-  const { openSnackBar, handleSnack} = SnackBarCart();
+
   
 
 
@@ -150,21 +182,21 @@ function ProductDetail() {
               <div className={style.actions}>
                 <button 
                   className={`${style.btn} ${style['btn_primary']}`} 
-                  onClick={handleSnack}
+                  onClick={handleSnackBarCart}
                 >
                   Aggiungi al carrello
                 </button>
                 <Snackbar
                 
-                          open={openSnackBar}
+                          open={openSnackBarCart}
                           autoHideDuration={1000}
-                          onClose={handleSnack}
+                          onClose={handleSnackBarCart}
                  
                         >
                 
                 
                           <Alert
-                    onClose={handleSnack}
+                    onClose={handleSnackBarCart}
                     severity="success"
                     sx={{ width: '100%' }}
                   >
@@ -202,7 +234,8 @@ function ProductDetail() {
               <p>Basato su {productData.numberOfRatings} recensioni globali</p>
               <Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Aggiungi Recensione</Button>
             </div>
-            <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog>
+            
+           
               <div id={style.div_review}>
                 {loading? <CircularProgress className={style.loading}></CircularProgress> :  error!==null && reviews.length===0? <p>Non ci sono recensioni</p> : error? "": reviews.map((review) => (
                   <Review 
@@ -212,7 +245,8 @@ function ProductDetail() {
                     description={review.description} // Nuovo
                     title={review.title}
                     date={review.date}
-                    userName={review.userName}
+                    name={review.name}
+                    surname={review.surname}
                     rating={review.rating}
                     />
                 ))}
@@ -220,8 +254,23 @@ function ProductDetail() {
             </div>
         </div>
 
-    :  <div className={style.rowEmptyReviews}><div> <h2>Recensioni Clienti</h2>  <p>Non ci sono recensioni</p></div> <span><Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Aggiungi Recensione</Button></span>  
-    <ReviewDialog isOpen={openDialog} handleClose={handleClose}></ReviewDialog></div> }
+    :  <div className={style.rowEmptyReviews}><div> <h2>Recensioni Clienti</h2>  <p>Non ci sono recensioni</p></div> <span> <Button onClick={handleClickOpen} id={style.addReviewButton} variant="contained" endIcon={<AddIcon/>}>Aggiungi Recensione</Button></span>
+  </div> }
+  {userData?  <ReviewDialog propUserData={userData} isOpen={openDialog} handleClose={handleClose}></ReviewDialog>:<Snackbar
+                
+                          open={openSnackBar}
+                          autoHideDuration={1000}
+                          onClose={handleSnack}
+                 
+                        >
+                          <Alert
+                    onClose={handleSnack}
+                    severity="error"
+                    sx={{ width: '100%' }}
+                  >
+                    {addReviewError}
+                  </Alert>
+                        </Snackbar>}
           </div> 
       <Footer/>
     </>

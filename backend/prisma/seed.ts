@@ -1,282 +1,236 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
-// Istanzia il client
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Inizio seeding del database (Strict Mode)...');
+  console.log('🌱 Inizio del seeding (Strict Mode)...');
 
-  // -------------------------------------------------------
-  // 1. PULIZIA DATABASE (Ordine inverso per evitare FK errors)
-  // -------------------------------------------------------
-  const deleteParams = [
-    prisma.review.deleteMany(),
-    prisma.orderWithProducts.deleteMany(),
-    prisma.order.deleteMany(),
-    prisma.product.deleteMany(),
-    prisma.customer.deleteMany(),
-    prisma.admin.deleteMany(),
-    prisma.employee.deleteMany(),
-    prisma.user.deleteMany(),
-    prisma.city.deleteMany(),
-    prisma.nation.deleteMany(),
-    prisma.carosello.deleteMany(),
-  ];
+  // 1. PULIZIA DEL DATABASE
+  // L'ordine è importante per via delle Foreign Keys
+  await prisma.orderWithProducts.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.order.deleteMany();
+  await prisma.customer.deleteMany();
+  await prisma.admin.deleteMany();
+  await prisma.employee.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.city.deleteMany();
+  await prisma.nation.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.carosello.deleteMany();
 
-  await prisma.$transaction(deleteParams);
-  console.log('🧹 Database pulito con successo.');
+  console.log('🗑️ Database pulito.');
 
-  // Password hashata comune per tutti gli utenti di test
   const hashedPassword = await bcrypt.hash('password123', 10);
 
-  // -------------------------------------------------------
-  // 2. NAZIONI E CITTÀ
-  // -------------------------------------------------------
-  // Creiamo l'Italia con 2 città
-  const italia = await prisma.nation.create({
-    data: {
-      name: 'Italia',
-      cities: {
-        create: [
-          { name: 'Milano', cap: '20100' },
-          { name: 'Roma', cap: '00100' },
-        ],
-      },
-    },
-    include: { cities: true },
-  });
-
-  // Creiamo la Francia con 1 città
-  const francia = await prisma.nation.create({
-    data: {
-      name: 'Francia',
-      cities: {
-        create: [
-          { name: 'Parigi', cap: '75000' },
-        ],
-      },
-    },
-    include: { cities: true },
-  });
-
-  // Helper per ottenere gli ID in modo sicuro (Strict Mode check)
-  const idMilano = italia.cities.find((c) => c.name === 'Milano')?.id;
-  const idRoma = italia.cities.find((c) => c.name === 'Roma')?.id;
-  const idParigi = francia.cities[0]?.id;
-
-  if (!idMilano || !idRoma || !idParigi) {
-    throw new Error('❌ Errore critico: Impossibile recuperare gli ID delle città create.');
+  // 2. NATION
+  console.log('🌍 Creating Nations...');
+  // Creiamo le nazioni una per una per essere sicuri di averle
+  const nationsList = [];
+  for (let i = 0; i < 10; i++) {
+    const nation = await prisma.nation.create({
+      data: { name: `Nazione ${i + 1}` },
+    });
+    nationsList.push(nation);
   }
 
-  console.log('🌍 Nazioni e Città create.');
+  // 3. CITY
+  console.log('🏙️ Creating Cities...');
+  const citiesList = [];
+  for (let i = 0; i < 10; i++) {
+    // STRICT MODE FIX: Controllo che la nazione esista
+    const nation = nationsList[i % nationsList.length];
+    if (!nation) throw new Error(`Nazione mancante all'indice ${i}`);
 
-  // -------------------------------------------------------
-  // 3. PRODOTTI
-  // -------------------------------------------------------
-  const prodPhone = await prisma.product.create({
-    data: {
-      title: 'Smartphone Ultra',
-      description: 'Il telefono definitivo',
-      img: 'phone.jpg',
-      price: 899.99,
-      qt: 100,
-      weigth: 0.2,
-      heigth: 15,
-      width: 7,
-      length: 1,
-      shippingDate: new Date(),
-    },
-  });
-
-  const prodLaptop = await prisma.product.create({
-    data: {
-      title: 'Laptop Dev',
-      description: 'Perfetto per programmare',
-      img: 'laptop.jpg',
-      price: 1200.50,
-      qt: 50,
-      weigth: 1.5,
-      heigth: 20,
-      width: 30,
-      length: 2,
-      oldPrice: 1400.00,
-      shippingDate: new Date(),
-    },
-  });
-
-  console.log('📦 Prodotti creati.');
-
-  // -------------------------------------------------------
-  // 4. UTENTI E RUOLI
-  // -------------------------------------------------------
-
-  // A. Admin
-  await prisma.user.create({
-    data: {
-      name: 'Mario',
-      surname: 'Rossi',
-      email: 'admin@shop.com',
-      pwd: hashedPassword,
-      admins: {
-        create: {}, // Record vuoto nella tabella Admin collegato
+    const city = await prisma.city.create({
+      data: {
+        name: `Città ${i + 1}`,
+        cap: `${10000 + i}`,
+        idNation: nation.id,
       },
-    },
-  });
+    });
+    citiesList.push(city);
+  }
 
-  // B. Employee
-  await prisma.user.create({
-    data: {
-      name: 'Luigi',
-      surname: 'Verdi',
-      email: 'staff@shop.com',
-      pwd: hashedPassword,
-      employees: {
-        create: {
-          role: 'Magazziniere',
-          task: 'Imballaggio',
-        },
+  // 4. USER (30 utenti totali)
+  console.log('busts_in_silhouette: Creating Users...');
+  const usersList = [];
+  for (let i = 0; i < 30; i++) {
+    const user = await prisma.user.create({
+      data: {
+        name: `NomeUser${i + 1}`,
+        surname: `CognomeUser${i + 1}`,
+        email: `user${i + 1}@example.com`,
+        pwd: hashedPassword,
+        imgProfile: `https://i.pravatar.cc/150?u=${i}`,
+        googleId: i % 2 === 0 ? `google-id-${i}` : null,
       },
-    },
-  });
+    });
+    usersList.push(user);
+  }
 
-  // C. Customer 1 (Vive a Milano)
-  const userCustomer1 = await prisma.user.create({
-    data: {
-      name: 'Giulia',
-      surname: 'Bianchi',
-      email: 'giulia@client.com',
-      pwd: hashedPassword,
-      customers: {
-        create: {
-          phonePrefix: 39,
-          phoneNumber: 333111111, // Nota: Int ha limite ~2 miliardi. Occhio ai numeri lunghi.
-          street: 'Via Dante',
-          civic: 1,
-          idCity: idMilano, // Colleghiamo Milano
-        },
+  // Dividiamo gli array (TypeScript sa che sono array, ma non sa se sono vuoti)
+  const usersForEmployees = usersList.slice(0, 10);
+  const usersForAdmins = usersList.slice(10, 20);
+  const usersForCustomers = usersList.slice(20, 30);
+
+  // 5. EMPLOYEE
+  console.log('💼 Creating Employees...');
+  for (let i = 0; i < 10; i++) {
+    // STRICT MODE FIX
+    const user = usersForEmployees[i];
+    if (!user) throw new Error(`Utente per Employee mancante all'indice ${i}`);
+
+    await prisma.employee.create({
+      data: {
+        role: i % 2 === 0 ? 'Manager' : 'Staff',
+        task: 'Gestione ordini',
+        idUser: user.id,
       },
-    },
-    include: { customers: true },
-  });
+    });
+  }
 
-  // D. Customer 2 (Vive a Roma)
-  const userCustomer2 = await prisma.user.create({
-    data: {
-      name: 'Paolo',
-      surname: 'Neri',
-      email: 'paolo@client.com',
-      pwd: hashedPassword,
-      customers: {
-        create: {
-          phonePrefix: 39,
-          phoneNumber: 333222222,
-          street: 'Via del Corso',
-          civic: 50,
-          idCity: idRoma, // Colleghiamo Roma
-        },
+  // 6. ADMIN
+  console.log('🛡️ Creating Admins...');
+  for (let i = 0; i < 10; i++) {
+    // STRICT MODE FIX
+    const user = usersForAdmins[i];
+    if (!user) throw new Error(`Utente per Admin mancante all'indice ${i}`);
+
+    await prisma.admin.create({
+      data: {
+        idUser: user.id,
       },
-    },
-    include: { customers: true },
-  });
+    });
+  }
 
-  console.log('👥 Utenti (Admin, Employee, Customers) creati.');
+  // 7. CUSTOMER
+  console.log('🛒 Creating Customers...');
+  const customersList = [];
+  for (let i = 0; i < 10; i++) {
+    // STRICT MODE FIX: Verifiche multiple
+    const user = usersForCustomers[i];
+    const city = citiesList[i % citiesList.length];
+    
+    if (!user) throw new Error(`Utente per Customer mancante all'indice ${i}`);
+    if (!city) throw new Error(`Città mancante all'indice ${i}`);
 
-  // Recuperiamo gli ID dei Customer per ordini e recensioni
-  const customer1Id = userCustomer1.customers[0]?.id;
-  const customer2Id = userCustomer2.customers[0]?.id;
+    const customer = await prisma.customer.create({
+      data: {
+        phonePrefix: BigInt(39),
+        phoneNumber: BigInt(333000000 + i),
+        street: `Via Roma ${i + 1}`,
+        civic: BigInt(i + 1),
+        idUser: user.id,
+        idCity: city.id,
+      },
+    });
+    customersList.push(customer);
+  }
 
-  if (!customer1Id || !customer2Id) throw new Error("Errore ID Customer");
+  // 8. PRODUCT
+  console.log('📦 Creating Products...');
+  const productsList = [];
+  for (let i = 0; i < 10; i++) {
+    const product = await prisma.product.create({
+      data: {
+        img: `https://placehold.co/600x400?text=Prodotto+${i + 1}`,
+        title: `Prodotto ${i + 1}`,
+        description: `Descrizione fantastica del prodotto ${i + 1}`,
+        price: 19.99 + i,
+        qt: BigInt(100 + i),
+        weigth: 0.5 + i / 10,
+        heigth: BigInt(10 + i),
+        width: BigInt(20 + i),
+        length: BigInt(30 + i),
+        oldPrice: i % 3 === 0 ? 25.99 + i : null,
+        shippingDate: new Date(),
+      },
+    });
+    productsList.push(product);
+  }
 
-  // -------------------------------------------------------
-  // 5. ORDINI
-  // -------------------------------------------------------
+  // 9. REVIEW
+  console.log('⭐ Creating Reviews...');
+  for (let i = 0; i < 10; i++) {
+    // STRICT MODE FIX
+    const customer = customersList[i];
+    const product = productsList[i];
+
+    if (!customer) throw new Error(`Customer mancante per Review ${i}`);
+    if (!product) throw new Error(`Product mancante per Review ${i}`);
+
+    await prisma.review.create({
+      data: {
+        idCustomer: customer.id,
+        idProduct: product.id,
+        title: i % 2 === 0 ? 'Ottimo!' : 'Così così',
+        description: 'Veramente un acquisto interessante.',
+        rating: (i % 5) + 1,
+        date: new Date(),
+      },
+    });
+  }
+
+  // 10. CAROSELLO
+  console.log('🖼️ Creating Carousel...');
+  for (let i = 0; i < 10; i++) {
+    await prisma.carosello.create({
+      data: {
+        img: `banner-${i}.jpg`,
+        alt: `Banner promozionale ${i}`,
+        caption: i % 2 === 0 ? 'Offerta imperdibile' : null,
+      },
+    });
+  }
+
+  // 11. ORDER
+  console.log('🚚 Creating Orders...');
+  const ordersList = [];
+  const statusList = ['carrello', 'Ricevuto', 'In produzione', 'Spedito', 'Consegnato'];
   
-  // Ordine 1 di Giulia
-  await prisma.order.create({
-    data: {
-      idUser: userCustomer1.id,
-      date: new Date(),
-      status: 'Spedito',
-      statusColor: 'success',
-      urlTracking: 'http://track.me/123',
-      typeOrder: 'Standard',
-      orderWithProducts: {
-        create: [
-          { qt: 1, idProduct: prodPhone.id },
-          { qt: 2, idProduct: prodLaptop.id },
-        ],
+  for (let i = 0; i < 10; i++) {
+    const user = usersForCustomers[i]; // Usiamo gli stessi utenti dei Customer
+    if (!user) throw new Error(`User mancante per Order ${i}`);
+
+    const order = await prisma.order.create({
+      data: {
+        idUser: user.id,
+        date: new Date(),
+        status: statusList[i % statusList.length]!,
+        urlTracking: `http://tracking.com/${i}XYZ`,
+        typeOrder: 'Standard',
       },
-    },
-  });
+    });
+    ordersList.push(order);
+  }
 
-  // Ordine 2 di Giulia (Ora è possibile averne più di uno!)
-  await prisma.order.create({
-    data: {
-      idUser: userCustomer1.id,
-      date: new Date(),
-      status: 'In produzione',
-      statusColor: 'warning',
-      urlTracking: '',
-      typeOrder: 'Express',
-      orderWithProducts: {
-        create: [
-          { qt: 5, idProduct: prodPhone.id },
-        ],
+  // 12. ORDER WITH PRODUCTS (Pivot)
+  console.log('🔗 Linking Orders and Products...');
+  for (let i = 0; i < 10; i++) {
+    const order = ordersList[i];
+    const product = productsList[i];
+
+    if (!order) throw new Error(`Order mancante per Pivot ${i}`);
+    if (!product) throw new Error(`Product mancante per Pivot ${i}`);
+
+    await prisma.orderWithProducts.create({
+      data: {
+        idOrder: order.id,
+        idProduct: product.id,
+        qt: 2, // Int
+        priceAtPurchase: Math.floor(product.price), // Int, conversione da Float
       },
-    },
-  });
+    });
+  }
 
-  console.log('🛒 Ordini creati.');
-
-  // -------------------------------------------------------
-  // 6. RECENSIONI
-  // -------------------------------------------------------
-  
-  // Recensione di Giulia sul Telefono
-  await prisma.review.create({
-    data: {
-      idCustomer: customer1Id,
-      idProduct: prodPhone.id,
-      title: 'Ottimo telefono',
-      description: 'Batteria infinita!',
-      rating: 5,
-      date: new Date(),
-    },
-  });
-
-  // Recensione di Paolo sullo stesso Telefono (Ora è possibile!)
-  await prisma.review.create({
-    data: {
-      idCustomer: customer2Id,
-      idProduct: prodPhone.id,
-      title: 'Buono ma costoso',
-      description: 'Il prezzo è altino...',
-      rating: 4,
-      date: new Date(),
-    },
-  });
-
-  console.log('⭐ Recensioni create.');
-
-  // -------------------------------------------------------
-  // 7. CAROSELLO
-  // -------------------------------------------------------
-  await prisma.carosello.createMany({
-    data: [
-      { img: '/banner1.jpg', alt: 'Saldi Estivi', caption: 'Sconti al 50%' },
-      { img: '/banner2.jpg', alt: 'Nuova Collezione', caption: 'Scopri il tech' },
-    ],
-  });
-
-  console.log('🖼️ Carosello popolato.');
-  console.log('✅ SEEDING COMPLETATO CON SUCCESSO!');
+  console.log('✅ Seeding completato con successo!');
 }
 
-// Esecuzione e gestione errori
 main()
   .catch((e) => {
-    console.error('❌ Errore fatale durante il seeding:', e);
+    console.error('❌ Errore durante il seeding:', e);
     process.exit(1);
   })
   .finally(async () => {

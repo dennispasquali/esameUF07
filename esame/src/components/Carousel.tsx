@@ -1,18 +1,20 @@
+
 import type { ICarouselImage } from "../Interfaces/Carousel";
 import style from "../ComponentStyle/Carousel.module.css";
 import { useEffect, useState, useRef } from "react";
 import { CircleRounded } from "@mui/icons-material";
 import { grey, amber } from "@mui/material/colors";
 import CircularProgress from "@mui/material/CircularProgress";
-import { FetchApiGet } from "../hooks/FetchApiGet";
+import { useFetchApiGet } from "../hooks/useFetchApiGet";
 
 function Carousel() {
 
-    const {data,loading,error}=FetchApiGet<ICarouselImage[]>("http://localhost:3000/api/carousel");
+    const {data,loading,error}=useFetchApiGet<ICarouselImage[]>("http://localhost:3000/api/carousel");
      const [transitionEnabled, setTransitionEnabled] = useState(true);
-      const nextCopyIndex = useRef(0);
-      const imagesData=useRef(data); 
+      
          const [currentIndex, setCurrentIndex] = useState(0);
+         const nextCopyIndex = useRef(0);
+      const imagesData=useRef(data); 
      function getNextImage(currentList: ICarouselImage[] | null) {
         if(currentList!=null && data!=null) {
                 const originalIndex = nextCopyIndex.current % data.length;

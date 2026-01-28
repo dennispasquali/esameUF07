@@ -2,18 +2,16 @@
 import style from "../ComponentStyle/ScrollBarOrders.module.css"
 import { useRef, useState } from "react";
 import Chip from "@mui/material/Chip";
-import type { IOrder } from "../Interfaces/Order";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import ReplayIcon from '@mui/icons-material/Replay';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-interface orderScrollListProps {
-    orders: IOrder[];
-    height?: string; // Opzionale: per personalizzare l'altezza
-}
+import React from "react";
+import type { IScrollBarOrders } from "../Interfaces/ScrollBarOrders";
 
-function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
 
+function ScrollBarOrders({ orders, height = '400px' }: IScrollBarOrders) {
+    console.log(orders);
     const theme = createTheme({
         palette: {
             background: { default: '#f8f9fa' },
@@ -30,20 +28,33 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
-
+    type ChipColor = "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!containerRef.current) return;
         setIsDragging(true);
         setStartX(e.pageX - containerRef.current.offsetLeft);
         setScrollLeft(containerRef.current.scrollLeft);
     };
-
+    const getStatusColor = (status: string): ChipColor => {
+  switch (status) {
+    case 'Spedito':
+      return 'secondary';
+    case 'In produzione':
+      return 'warning'; 
+    case 'Cancellato':
+      return 'error';   
+    case 'Consegnato':
+      return 'success'; 
+    default:
+      return 'default'; 
+  }
+}
 
     const stopDragging = () => {
         setIsDragging(false);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: React.MouseEvent) => {
         if (!isDragging || !containerRef.current) return;
 
         e.preventDefault(); // Previene comportamenti strani di selezione
@@ -66,35 +77,39 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
             onMouseMove={handleMouseMove}>
                 
             {orders.map((order) => (
-                <div className={style.single_order} key={order.id}>
-                    <img
-                    src={order.url}
-                    alt={order.alt}
-                    className={style.scroll_order_image}
-                    loading="lazy" // Ottimizzazione per non caricare tutto subito
-                    draggable={false}
-                    />
-                    <div>
-                        <p className={style.order_title}>{order.quantity} {order.title}</p>
-                        <span className={style.order_id_date}>{order.id} • {order.date}</span>
+            <React.Fragment key={order.id}>
+                 {order.orderWithProducts.map((item)=>(
+                        <div className={style.single_order} key={item.id}>
+                            <img
+                        src={item.product.img}
+                        alt={item.product.title}
+                        className={style.scroll_order_image}
+                        loading="lazy" // Ottimizzazione per non caricare tutto subito
+                        draggable={false}
+                        />
+
+                        <div>
+                        <p className={style.order_title}>{item.qt} {item.product.title}</p>
+                        <span className={style.order_id_date}>ID Ordine {order.id} • {new Date(order.date).toLocaleDateString('it-IT')}</span>
                     </div>
 
-                    <div className={style.price_shipping_container}>
+
+                        <div className={style.price_shipping_container}>
                          <ThemeProvider theme={theme}>
+                            
                             <Chip 
                             label={order.status} 
                             size="small" 
-                            color={order.statusColor} 
+                            color={getStatusColor(order.status)} 
                             variant="outlined"
-                            sx={{ fontWeight: 'bold', border: 'none', bgcolor: `${order.statusColor === 'warning' ? '#fffbeb' : order.statusColor === 'success' ? '#ecfdf5' : '#eff6ff'}`, color: `${order.statusColor}.main` }}
+                            sx={{ fontWeight: 'bold', border: 'none', bgcolor: `${getStatusColor(order.status) === 'warning' ? '#fffbeb' : getStatusColor(order.status) === 'success' ? '#ecfdf5' : '#eff6ff'}`, color: `${getStatusColor(order.status)}.main` }}
                                 />
                          </ThemeProvider>
                         
-                        <p className={style.price}>€ {order.price}</p>
-                  
-                    </div>
-                     
-                     <div className={style.shipping_reorder_div}>
+                        <p className={style.price}>€ {item.product.price}</p>
+                         </div>
+
+                         <div className={style.shipping_reorder_div}>
                         <Button 
                         variant="text" 
                         size="small" 
@@ -112,13 +127,23 @@ function ScrollBarOrders({ orders, height = '400px' }: orderScrollListProps) {
                         Visualizza il tracking
                     </Button>
                      </div>
+                        </div>
+                         
+                    ))}
+            </React.Fragment>
+             ))}
+                   
+                    
+
+                    
+                  
+                   
+                     
+                     
                      
                     
                 </div>
-                
-            ))}
-        </div>
-    )
+        )
 }
 
 export default ScrollBarOrders

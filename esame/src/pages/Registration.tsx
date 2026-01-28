@@ -30,7 +30,7 @@ function Registration() {
     const [city,setCity]=useState<string>("");
     const [invalidPrefix,setInvalidPrefix]=useState<string>("");
     const [invalidCivic,setInvalidCivic]=useState<string>("");
-    const [genericError,setGenericError]=useState<string | null>(null);
+    const [genericError,setGenericError]=useState<string>("");
     const { openSnackBar, handleSnack} = SnackBarCart();
     
   // 1. INIZIALIZZI LA HOOK
@@ -43,6 +43,7 @@ function Registration() {
     function handleSubmit(e:React.FormEvent) {
       e.preventDefault();
       if(password===riconfermationPwd && invalidEmailMessage==="" && telephoneNumber!==0 && prefix!==null && name!=="" && surname!=="" && country!=="" && street!=="" && civic!==null && civic && cap!=="" && city!=="") {
+        setGenericError("");
         const newUser={
           name,
           surname,
@@ -60,6 +61,7 @@ function Registration() {
         } as IRegistration
         mutate(newUser, {
           onSuccess: (data) => {
+              setGenericError("");
               console.log("Dati ricevuti nella callback:", data);
               localStorage.setItem('token', data.token);
               localStorage.setItem('user', JSON.stringify(data.user));
@@ -338,7 +340,7 @@ function Registration() {
       </form>
        </div>
 
-       {genericError ?
+       {genericError!="" ?
       <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleSnack}>
          <Alert  onClose={handleSnack} severity="error"> {genericError}</Alert>
         
