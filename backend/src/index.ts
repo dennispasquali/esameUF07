@@ -10,6 +10,7 @@ import OauthRoutes from './routes/OauthRoutes';
 import './config/passport';
 import LoginRoutes from './routes/LoginRoutes';
 import OrdersRoutes from './routes/OrdersRoutes';
+import CartRoutes from './routes/CartRoutes';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -25,8 +26,7 @@ app.use('/api/orders',OrdersRoutes);
 
 app.get('/api/carousel',getImageData)
 
-
-
+app.use('/api/cart',CartRoutes);
 
 app.post('/api/registration/submit',registerNewUser);
 

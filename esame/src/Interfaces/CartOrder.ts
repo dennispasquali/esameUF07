@@ -1,5 +1,7 @@
-export interface CartOrder{
-    id: number,  
+export interface ICartOrder{
+    id: number, 
+    idProduct: number,
+    qtMax:number, 
     title: string, 
     unitPrice: number,
     url: string,

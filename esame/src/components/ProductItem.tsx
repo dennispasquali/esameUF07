@@ -5,15 +5,24 @@ import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { SnackBarCart } from "../hooks/SnackBarCart";
+import type { IUserProfile } from "../Interfaces/UserJWT";
+import { useApiPost } from "../hooks/useApiPost";
+import type { ICartSubmit } from "../Interfaces/CartSubmit";
 
 type TProductItem = IProductItem & {
   reset: () => void;
 };
+
 function ProductItem({reset,id,img,qt, title,description,rating,numberOfRatings,price,oldPrice,shippingDate}: TProductItem) {
-    
+    const token=localStorage.getItem("token");
+    const storedUserString = localStorage.getItem('user');
+     const user: IUserProfile | null = storedUserString ? JSON.parse(storedUserString) : null;
+    const { mutate, isPending,error} = useApiPost<ICartSubmit,string>(`http://localhost:3000/api/cart/submit`,token);
     const { openSnackBar, handleSnack} = SnackBarCart();
     const navigate = useNavigate();
-    const productData :IProductItem={
+
+
+   const productData :IProductItem={
             id,
             img,
             title,
@@ -24,6 +33,41 @@ function ProductItem({reset,id,img,qt, title,description,rating,numberOfRatings,
             shippingDate,
             oldPrice,
             qt
+    }
+  
+    
+    if(error) {
+      console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+    }
+    
+    function handleAddToCart() {
+       console.log(user);
+      if(token!==null && user!==null) {
+         const cartData :ICartSubmit={
+            idProduct:id,
+            idUser:user.id,
+            date: new Date(),
+            status: "carrello",
+            urlTracking: "",
+            typeOrder: "standard",
+            qt: 1,
+            priceAtPurchase: price,
+          }
+
+          
+      mutate(cartData, {
+        onSuccess: (data) => {
+            console.log("Dati ricevuti nella callback:", data);
+        },
+        onError: (error) => {
+          console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+         
+      }
+        
+      })
+     
+      }              
+      handleSnack();
     }
     // Funzione handler nominata (non anonima/lambda)
     function handleProductClick() {
@@ -57,8 +101,9 @@ function ProductItem({reset,id,img,qt, title,description,rating,numberOfRatings,
             <span className={style.fraction}>{decimali}</span>
           {oldPrice && <span className={style.old_price}>Consigliato €{oldPrice}</span>}
           </div>
-          <button onClick={handleSnack} className={style.add_to_cart_btn}>Aggiungi al carrello</button>
-          <Snackbar
+          <button onClick={handleAddToCart} className={style.add_to_cart_btn}>Aggiungi al carrello</button>
+          
+           {token===null || user===null? <Snackbar
 
           open={openSnackBar}
           autoHideDuration={1000}
@@ -66,15 +111,48 @@ function ProductItem({reset,id,img,qt, title,description,rating,numberOfRatings,
  
         >
 
+       
+          <Alert
+    onClose={handleSnack}
+    severity="error"
+    sx={{ width: '100%' }}
+  >
+    Devi prima registrarti
+  </Alert>
+        </Snackbar>:isPending===false && error===null? <Snackbar
 
+          open={openSnackBar}
+          autoHideDuration={1000}
+          onClose={handleSnack}
+ 
+        >
+
+       
           <Alert
     onClose={handleSnack}
     severity="success"
     sx={{ width: '100%' }}
   >
-    Prodotto aggiunto al carrello
+    Prodotto aggiunto correttamente al carrello
   </Alert>
-        </Snackbar>
+        </Snackbar>: isPending===false && error!==null ? <Snackbar
+
+          open={openSnackBar}
+          autoHideDuration={1000}
+          onClose={handleSnack}
+ 
+        >
+
+       
+          <Alert
+    onClose={handleSnack}
+    severity="error"
+    sx={{ width: '100%' }}
+  >
+    C'è stato un problema nell aggiungere il prodotto al carrello
+  </Alert>
+        </Snackbar>: ""}
+         
 
         </div>
       </div>

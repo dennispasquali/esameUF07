@@ -1,6 +1,7 @@
 // src/routes/prodottoRoutes.ts
 import { Router } from 'express';
 import { getProdotti, getReviewsByProdottoId, submitProductReview } from '../controllers/ProductController';
+import { verifyToken } from '../middleware/authMiddleware';
 
 const router = Router();
 
@@ -11,6 +12,6 @@ router.get('/', getProdotti);
 router.get('/:id/reviews', getReviewsByProdottoId);
 
 // POST http://localhost:3000/api/products/1/reviews/submit
-router.post('/:id/reviews/submit', submitProductReview);
+router.post('/:id/reviews/submit',verifyToken, submitProductReview);
 
 export default router;

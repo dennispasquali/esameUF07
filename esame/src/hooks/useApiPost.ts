@@ -2,13 +2,19 @@ import { useMutation } from "@tanstack/react-query";
 import type { ApiError } from "../Interfaces/ApiError";
 
 
-async function postCall<Tin,Tout>(url:string, content:Tin) :Promise<Tout>{
+async function postCall<Tin,Tout>(url:string, content:Tin,token?:string | null) :Promise<Tout>{
     try {
+
+       const headers: HeadersInit = {
+          'Content-Type': 'application/json',
+        };
+
+        if(token) {
+          headers['Authorization']=`Bearer ${token}`;
+        }
          const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json', 
-    },
+    headers: headers,
     body: JSON.stringify(content),
   });
 
@@ -48,10 +54,10 @@ async function postCall<Tin,Tout>(url:string, content:Tin) :Promise<Tout>{
 }
  
 
-export function useApiPost<Tin,Tout>(url:string) {
+export function useApiPost<Tin,Tout>(url:string,token?:string | null) {
 
   return useMutation<Tout,ApiError,Tin>({
-    mutationFn: (content) => postCall<Tin,Tout>(url, content), // Passi solo la funzione, React Query fa il resto
+    mutationFn: (content) => postCall<Tin,Tout>(url, content,token), // Passi solo la funzione, React Query fa il resto
 });
 }
 

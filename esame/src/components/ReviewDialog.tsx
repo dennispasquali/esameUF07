@@ -11,8 +11,8 @@ import Alert from "@mui/material/Alert";
 import type { IReviewDialog } from "../Interfaces/ReviewDialog";
 import type { IReviewDialogSubmit } from "../Interfaces/ReviewDialogSubmit";
 function ReviewDialog({ isOpen, handleClose,propUserData }: { isOpen: boolean, handleClose: () => void,propUserData:IReviewDialog}) {
-
-    const { mutate, isPending} = useApiPost<IReviewDialogSubmit,string>(`http://localhost:3000/api/products/${propUserData.productId}/reviews/submit`);
+    const token=localStorage.getItem('token');
+    const { mutate, isPending} = useApiPost<IReviewDialogSubmit,string>(`http://localhost:3000/api/products/${propUserData.productId}/reviews/submit`,token);
     const [isRendered, setIsRendered] = useState(isOpen);
     const [rating,setRating]=useState<number>(-1);
     const [title,setTitle]=useState<string>("");

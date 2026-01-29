@@ -33,17 +33,16 @@ export const getOrdersToArrive = async (req: Request, res: Response) => {
     }
   },
   //Include i prodotti e la quantità
-  include: {
-    orderWithProducts: { // Nome della relazione nella tabella Order (spesso 'orderItems' o 'products')
+  // Nome della relazione nella tabella Order (spesso 'orderItems' o 'products')
       include: {
         product: true // Include i dettagli del prodotto (nome, prezzo, img, ecc.)
-      }
-    }
-  },
-  // Opzionale: Ordina dal più recente
-  orderBy: {
+      },
+     orderBy: {
     date: 'desc'
   }
+  
+  // Opzionale: Ordina dal più recente
+ 
 });
 
 
@@ -100,13 +99,11 @@ export const getOrdersArrived = async (req: Request, res: Response) => {
     }
   },
   //Include i prodotti e la quantità
-  include: {
-    orderWithProducts: { // Nome della relazione nella tabella Order (spesso 'orderItems' o 'products')
+  // Nome della relazione nella tabella Order (spesso 'orderItems' o 'products')
       include: {
         product: true // Include i dettagli del prodotto (nome, prezzo, img, ecc.)
-      }
-    }
-  },
+      },
+    
   // Opzionale: Ordina dal più recente
   orderBy: {
     date: 'desc'

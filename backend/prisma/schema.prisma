@@ -45,13 +45,13 @@ model Employee {
   role    String
   task String
   idUser Int @unique
-  user   User @relation(fields: [idUser], references: [id])
+  user   User @relation(fields: [idUser], references: [id],onDelete: Cascade)
 }
 
 model Admin {
   id       Int    @id @default(autoincrement())
   idUser Int @unique
-  user   User @relation(fields: [idUser], references: [id])
+  user   User @relation(fields: [idUser], references: [id],onDelete: Cascade)
 }
 
 model Customer {
@@ -61,7 +61,7 @@ model Customer {
   street                String
   civic             BigInt
   idUser           Int @unique
-  user             User       @relation(fields: [idUser], references: [id])
+  user             User       @relation(fields: [idUser], references: [id] ,onDelete: Cascade)
   idCity            Int 
   city              City        @relation(fields: [idCity], references: [id])
   reviews        Review[]
@@ -81,7 +81,7 @@ model Product {
   oldPrice      Float?
   shippingDate     DateTime
   reviews        Review[]
-  orderWithProducts OrderWithProducts[]
+  orders Order[]
 }
 
 model Review {
@@ -89,7 +89,7 @@ model Review {
   idCustomer   Int 
   customer     Customer  @relation(fields: [idCustomer], references: [id])
   idProduct  Int 
-  Product    Product @relation(fields: [idProduct], references: [id])
+  Product    Product @relation(fields: [idProduct], references: [id], onDelete: Cascade)
   description String
   title      String
   rating Float
@@ -113,16 +113,11 @@ model Order {
   status             String              @default("carrello")
   urlTracking        String
   typeOrder        String
-  orderWithProducts OrderWithProducts[]
-}
-
-model OrderWithProducts {
-  id         Int      @id @default(autoincrement())
   qt         Int
   priceAtPurchase Int
   idProduct Int 
-  product   Product @relation(fields: [idProduct], references: [id])
-  idOrder   Int 
-  order     Order   @relation(fields: [idOrder], references: [id])
-  @@unique([idOrder, idProduct])
+  product   Product @relation(fields: [idProduct], references: [id],onDelete: Cascade)
+  
 }
+
+

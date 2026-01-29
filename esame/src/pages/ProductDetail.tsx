@@ -15,6 +15,8 @@ import { useFetchApiGet } from "../hooks/useFetchApiGet";
 import type { IReview } from "../Interfaces/Review";
 import type {IUserProfile } from "../Interfaces/UserJWT";
 import type { IReviewDialog } from "../Interfaces/ReviewDialog";
+import { useApiPost } from "../hooks/useApiPost";
+import type { ICartSubmit } from "../Interfaces/CartSubmit";
 function ProductDetail() {
 
   const FREE_SHIPPING_LIMIT_PRICE:number=50;
@@ -32,6 +34,49 @@ function ProductDetail() {
       const { openSnackBar:openSnackBarCart, handleSnack:handleSnackBarCart} = SnackBarCart();
   const {error: errorV,data :dataV}= useFetchApiGet<IUserProfile>("http://localhost:3000/api/login/verify",token);
 
+      const storedUserString = localStorage.getItem('user');
+       // 2. Se esiste, convertila (parse). Altrimenti imposta null.
+       const user: IUserProfile | null = storedUserString ? JSON.parse(storedUserString) : null;
+      const { mutate, isPending,error:errorCartSubmit} = useApiPost<ICartSubmit,string>(`http://localhost:3000/api/cart/submit`,token);
+
+  if(errorCartSubmit) {
+   console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+  }
+
+
+  function handleAddToCart() {
+     console.log(user);
+      if(quantityRef!==null && quantityRef.current!==null && quantityRef.current.value!=="") {
+        if(token!==null && user!==null) {
+         const cartData :ICartSubmit={
+            idProduct:productData.id,
+            idUser:user.id,
+            date: new Date(),
+            status: "carrello",
+            urlTracking: "",
+            typeOrder: "standard",
+            qt: parseInt(quantityRef.current.value),
+            priceAtPurchase: productData.price,
+          }
+
+          
+      mutate(cartData, {
+        onSuccess: (data) => {
+            console.log("Dati ricevuti nella callback:", data);
+        },
+        onError: (error) => {
+          console.error("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+         
+      }
+      }) 
+      
+        
+      }
+     
+      }              
+      handleSnackBarCart();
+  }
+
   console.log(productData);
   let reviews:IReview[]=[];
   if(data!==null) {
@@ -42,7 +87,7 @@ function ProductDetail() {
 
   const handleClickOpen = () => {
     
-    if(localStorage.getItem('token')!=null && dataV!=null) {
+    if(localStorage.getItem('token')!==null && dataV!==null) {
       if(dataV) {
         //metto id prodottto nei dati da passare al backend cosi quando reviewDialog glieli manda sa a che prodotto collegare la recensione
         const dataToPass:IReviewDialog={
@@ -182,27 +227,76 @@ function ProductDetail() {
               <div className={style.actions}>
                 <button 
                   className={`${style.btn} ${style['btn_primary']}`} 
-                  onClick={handleSnackBarCart}
+                  onClick={handleAddToCart}
                 >
                   Aggiungi al carrello
                 </button>
-                <Snackbar
-                
-                          open={openSnackBarCart}
-                          autoHideDuration={1000}
-                          onClose={handleSnackBarCart}
-                 
-                        >
-                
-                
-                          <Alert
-                    onClose={handleSnackBarCart}
-                    severity="success"
-                    sx={{ width: '100%' }}
-                  >
-                    Prodotto aggiunto al carrello
-                  </Alert>
-                        </Snackbar>
+               
+                {quantityRef===null || quantityRef.current===null ||  quantityRef.current.value===""?<Snackbar
+
+          open={openSnackBarCart}
+          autoHideDuration={1000}
+          onClose={handleSnackBarCart}
+ 
+        >
+
+       
+          <Alert
+    onClose={handleSnackBarCart}
+    severity="error"
+    sx={{ width: '100%' }}
+  >
+    Devi Selezionare la quantità
+  </Alert>
+        </Snackbar>:token===null || user===null? <Snackbar
+
+          open={openSnackBarCart}
+          autoHideDuration={1000}
+          onClose={handleSnackBarCart}
+ 
+        >
+
+       
+          <Alert
+    onClose={handleSnackBarCart}
+    severity="error"
+    sx={{ width: '100%' }}
+  >
+    Devi prima registrarti
+  </Alert>
+        </Snackbar>:isPending===false && errorCartSubmit===null? <Snackbar
+
+          open={openSnackBarCart}
+          autoHideDuration={1000}
+          onClose={handleSnackBarCart}
+ 
+        >
+
+       
+          <Alert
+    onClose={handleSnackBarCart}
+    severity="success"
+    sx={{ width: '100%' }}
+  >
+    Prodotto aggiunto correttamente al carrello
+  </Alert>
+        </Snackbar>: isPending===false && errorCartSubmit!==null ? <Snackbar
+
+          open={openSnackBarCart}
+          autoHideDuration={1000}
+          onClose={handleSnackBarCart}
+ 
+        >
+
+       
+          <Alert
+    onClose={handleSnackBarCart}
+    severity="error"
+    sx={{ width: '100%' }}
+  >
+    C'è stato un problema nell aggiungere il prodotto al carrello
+  </Alert>
+        </Snackbar>: ""}
                 
                 <button 
                   className={`${style.btn} ${style['btn_secondary']}`}
