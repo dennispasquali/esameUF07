@@ -102,18 +102,21 @@ function ScrollBarOrders({ orders, height = '400px' }: IScrollBarOrders) {
             {/* SEZIONE CHE MOSTRA I DATI DEGLI ORDINI */}
             {orders.map((order) => (
                 <React.Fragment key={order.id}>
-                    {order.orderWithProducts.map((item) => (
-                        <div className={style.single_order} key={item.id}>
-                            <img
-                                src={item.product.img}
-                                alt={item.product.title}
+                   
+                        <div className={style.single_order} key={order.id}>
+                            <div className={style.single_order_img_container}>
+                                <img
+                                src={order.product.img}
+                                alt={order.product.title}
                                 className={style.scroll_order_image}
                                 loading="lazy" // Ottimizzazione per non caricare tutto subito
                                 draggable={false}
-                            />
+                                />
+                            </div>
+                           
 
                             <div>
-                                <p className={style.order_title}>{item.qt} {item.product.title}</p>
+                                <p className={style.order_title}>{order.qt} {order.product.title}</p>
                                 <span className={style.order_id_date}>ID Ordine {order.id} • {new Date(order.date).toLocaleDateString('it-IT')}</span>
                             </div>
 
@@ -129,7 +132,7 @@ function ScrollBarOrders({ orders, height = '400px' }: IScrollBarOrders) {
                                     />
                                 </ThemeProvider>
 
-                                <p className={style.price}>€ {item.product.price}</p>
+                                <p className={style.price}>€ {order.product.price}</p>
                             </div>
 
                             {/* SEZIONE BOTTONI */}
@@ -153,7 +156,7 @@ function ScrollBarOrders({ orders, height = '400px' }: IScrollBarOrders) {
                             </div>
                         </div>
 
-                    ))}
+                   
                 </React.Fragment>
             ))}
         </div>

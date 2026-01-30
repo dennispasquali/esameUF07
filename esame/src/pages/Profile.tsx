@@ -34,7 +34,7 @@ function Profile() {
   const user: IUserProfile | null = storedUserString ? JSON.parse(storedUserString) : null;
 
   //SE L'UTENTE NON è REGISTRATO LO REINDIRIZZO VERSO IL LOGIN
-  if (!user || !localStorage.getItem("token") || !toArriveOrders) {
+  if (!user || !localStorage.getItem("token")) {
     navigate("/login");
   } else {
 

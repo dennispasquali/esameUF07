@@ -41,6 +41,14 @@
   padding: 16px;
 }
 
+.single_order_img_container {
+    height: 200px;
+}
+
+.single_order_img_container >img {
+  height: 100%;
+}
+
 .order_title {
   line-height: 1.57;
   font-weight: 700;
