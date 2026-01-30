@@ -1,3 +1,5 @@
+import type { RatingScore } from "./Review";
+
 export interface IProductItem {
   id: number;
   img: string;
@@ -5,7 +7,7 @@ export interface IProductItem {
   description: string;
   price: number;
   oldPrice: number | null;
-  rating: number;
+  rating: RatingScore;
   numberOfRatings: number;
   qt:number;
   shippingDate: Date;

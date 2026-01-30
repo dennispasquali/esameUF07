@@ -1,30 +1,25 @@
-/* ImageScrollList.css */
-
 .scroll_container {
-  /* Impostiamo lo scroll verticale automatico se il contenuto eccede l'altezza */
-  overflow-x: auto; 
+  overflow-x: auto;
   align-items: flex-start;
-  /* Layout */
   display: flex;
   flex-direction: row;
-  gap: 24px; /* Spazio tra le immagini */
-  /* Bordo e padding per estetica */
-    border: 1.5px solid #e5e7eb;
+  gap: 24px;
+  border: 1.5px solid #e5e7eb;
   padding: 10px;
   border-radius: 8px;
   background-color: white;
-    user-select: none;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  user-select: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
   width: auto;
 }
 
 .scroll_order_image {
-  width: 300px; /* L'immagine si adatta alla larghezza del contenitore */
-  height: auto; /* Mantiene l'aspect ratio */
+  width: 300px;
+  height: auto;
   border-radius: 8px;
   object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Nasconde scrollbar per Chrome, Safari and Opera */
@@ -41,40 +36,38 @@
   cursor: grabbing;
 }
 
-
-.single_order{
+.single_order {
   width: 100%;
   padding: 16px;
 }
 
-
-.order_title{
+.order_title {
   line-height: 1.57;
   font-weight: 700;
   font-size: 14px;
 }
 
-.order_id_date{
+.order_id_date {
   font-weight: 400;
-    font-size: 12px;
-    line-height: 1.66;
-    color: #64748B;
+  font-size: 12px;
+  line-height: 1.66;
+  color: #64748b;
 }
 
-.price_shipping_container{
+.price_shipping_container {
   margin-top: 16px;
   display: flex;
   gap: 16px;
   align-items: center;
 }
 
-.shipping_reorder_div{
+.shipping_reorder_div {
   display: flex;
   gap: 16px;
   margin-top: 0px;
 }
 
-.shipping_reorder_div button{
+.shipping_reorder_div button {
   text-transform: none;
   font-size: 13px;
 }

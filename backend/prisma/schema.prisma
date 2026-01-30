@@ -119,5 +119,3 @@ model Order {
   product   Product @relation(fields: [idProduct], references: [id],onDelete: Cascade)
   
 }
-
-

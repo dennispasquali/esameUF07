@@ -9,7 +9,7 @@ export interface IUserProfile {
 }
 
 export interface IUserJWT {
-    message: string;      // Es. "Login effettuato con successo"
-    token: string;        // Il JWT (es. "eyJhbGciOi...")
-    user: IUserProfile;    // L'oggetto utente coi dati sopra
+    message: string;      
+    token: string;        
+    user: IUserProfile;    
 }

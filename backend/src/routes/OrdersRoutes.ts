@@ -8,9 +8,10 @@ const router = Router();
 
 
 
-// GET http://localhost:3000/api/login/verify
+// GET http://localhost:3000/api/orders/toArrive
 router.get('/toArrive', verifyToken,getOrdersToArrive);
 
+// GET http://localhost:3000/api/orders/arrived
 router.get('/arrived',verifyToken,getOrdersArrived)
 
 export default router;

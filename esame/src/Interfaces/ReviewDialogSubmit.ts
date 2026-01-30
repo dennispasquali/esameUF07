@@ -1,8 +1,9 @@
+import type { RatingScore } from "./Review";
 export interface IReviewDialogSubmit{
     userId: number,
     productId:number,
     date: Date,
-    rating: number,
+    rating: RatingScore,
     title: string,
     description:string,
 }

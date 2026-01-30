@@ -18,9 +18,12 @@ function Home() {
 
   const NUMBER_OF_ITEM_PER_ROW = 10;
   const { data, loading, error } = useFetchApiGet<IProductItem[]>("http://localhost:3000/api/products");
+  //USE STATE PER DETERMINARE L'INDICE FINALE IN DATA CHE CONTIENE TUTTI I PRODOTTI DELLA PAGINA CORRENTE
   const [endIndex, setEndIndex] = useState<number>(NUMBER_OF_ITEM_PER_ROW);
+  //USE STATE PER DETERMINARE L'INDICE INIZIALE IN DATA CHE CONTIENE TUTTI I PRODOTTI DELLA PAGINA CORRENTE
   const [startIndex, setStartIndex] = useState<number>(0);
   const NUMBER_OF_BUTTONS = 3;
+  //ARRAY CHE CONTIENE IL NR PAGINA PER I BOTTONI
   const newPages = useRef<number[]>([1, 2, 3]);
 
 
@@ -30,16 +33,13 @@ function Home() {
   } else if (data !== null) {
     const prodotti: IProductItem[] = data;
 
+    //FUNZIONE CHE RESETTA/INIZIALIZZA GLI INDICI DELLA PAGINA 1 MOSTRATA DAI BOTTONI
     function resetCurrentIndexes() {
       let numberOfRow = (prodotti.length / NUMBER_OF_ITEM_PER_ROW) + 1;
       if (Number(((prodotti.length / NUMBER_OF_ITEM_PER_ROW) % 1).toFixed(2)) === 0.0 || (prodotti.length / NUMBER_OF_ITEM_PER_ROW) === 0 && prodotti.length >= NUMBER_OF_ITEM_PER_ROW) {
         numberOfRow = prodotti.length / NUMBER_OF_ITEM_PER_ROW;
       }
-
-
-
       let limit = 1;
-
       if (numberOfRow >= 3) {
         limit = 3;
       } else {
@@ -53,7 +53,7 @@ function Home() {
       }
     }
 
-
+    //CODICE CHE SI OCCUPA AD OGNI RENDER DI RICAVARE GLI INDICI PER MOSTRARE I PRODUCT ITEM DELLA PAGINA PRECEDENTE O SUCCESSIVA  E DI TROVARE IL NUMERO DI PAGINE MASSIMO (NUMBEROFROW)
     const productSliced = prodotti.slice(startIndex, endIndex);
     let numberOfRow = (prodotti.length / NUMBER_OF_ITEM_PER_ROW) + 1;
     if (Number(((prodotti.length / NUMBER_OF_ITEM_PER_ROW) % 1).toFixed(2)) === 0.0 || (prodotti.length / NUMBER_OF_ITEM_PER_ROW) === 0 && prodotti.length >= NUMBER_OF_ITEM_PER_ROW) {
@@ -62,7 +62,12 @@ function Home() {
 
 
 
-
+    
+    /**
+     * FUNZIONE CHE SI OCCUPA DI PASSARE 1 O X PAGINE SUCCESSIVE
+     * * @param val - il nr di pagine da saltare in avanti
+     * @returns void (aggiorna gli useState)
+    */
     function sliceNext(val: number) {
       val = val * NUMBER_OF_ITEM_PER_ROW
       if (endIndex + val <= (numberOfRow) * NUMBER_OF_ITEM_PER_ROW && startIndex + val <= (numberOfRow - 1) * NUMBER_OF_ITEM_PER_ROW) {
@@ -88,7 +93,12 @@ function Home() {
 
       }
     }
-
+    
+    /**
+     * FUNZIONE CHE SI OCCUPA DI PASSARE 1 O X PAGINE PRECEDENTI
+     * * @param val - il nr di pagine da saltare indietro
+     * @returns void (aggiorna gli useState)
+    */
     function slicePrev(val: number) {
       val = val * NUMBER_OF_ITEM_PER_ROW;
       if (endIndex - val > 0 && startIndex - val >= 0) {
@@ -106,7 +116,12 @@ function Home() {
       }
     }
 
-
+    
+    /**
+     * FUNZIONE CHE PERMETTE DI POTER USARE I BOTTONI CON IL NR PAGINA PER ARIVVARE ALLA SUDDETTA PAGINA
+     * * @param valButton - il nr pagina del bottone cui si vuole arrivare
+     * @returns void (aggiorna gli useState)
+    */
     function buttonChangePage(valButton: number) {
       if ((endIndex / NUMBER_OF_ITEM_PER_ROW) < valButton) {
         sliceNext(valButton - (endIndex / NUMBER_OF_ITEM_PER_ROW));
@@ -120,12 +135,12 @@ function Home() {
 
 
 
-
+    //TSX DELLA PAGINA HOME
     return (
       <>
-        <NavBar />
+        <NavBar/>
         <div className={style.carousel}>
-          <Carousel />
+          <Carousel/>
         </div>
 
 
@@ -133,7 +148,7 @@ function Home() {
         <div className={style.div_products}>
 
 
-
+          {/* SEZIONE PRODUCT ITEM */}
           {productSliced.map((prodotto) => (
             <ProductItem
               reset={resetCurrentIndexes}
@@ -152,6 +167,8 @@ function Home() {
           ))}
         </div>
 
+          {/* SEZIONE PER LA GESTIONE DEI BOTTONI PER LE PAGINE DI PRODOTTI*/}
+          {/* ESEMPIO: SE CI SONO 30 PRODOTTI NEL DB METTO I BOTTONI DA 1 A 3 SE CE NE SONO 10 TOLGO I BOTTONI E METTO UN P CON PAG 1 DI 1 */}
         {prodotti.length > 10 ? <div className={style.buttons_container}>
 
           <Button
@@ -198,6 +215,8 @@ function Home() {
       </>
     )
   } else {
+    //STAMPO EVENTUALI ERRORI NELLA CHIAMATA API PER I PRODOTTI (ONGI PRODOTTO è CHIAMATO PRODUCT 
+    // ITEM)
     console.error("code: " + error?.status + " message: " + error?.message + " details: " + error?.details);
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 
 import type { ICarouselImage } from "../Interfaces/Carousel";
 import style from "../ComponentStyle/Carousel.module.css";
@@ -7,60 +8,70 @@ import { grey, amber } from "@mui/material/colors";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useFetchApiGet } from "../hooks/useFetchApiGet";
 
+
+//COMPONENTE CAROSELLO
 function Carousel() {
 
-    const {data,loading,error}=useFetchApiGet<ICarouselImage[]>("http://localhost:3000/api/carousel");
-     const [transitionEnabled, setTransitionEnabled] = useState(true);
-      
-         const [currentIndex, setCurrentIndex] = useState(0);
-         const nextCopyIndex = useRef(0);
-      const imagesData=useRef(data); 
-     function getNextImage(currentList: ICarouselImage[] | null) {
-        if(currentList!=null && data!=null) {
-                const originalIndex = nextCopyIndex.current % data.length;
-            
-            const newImage = { ...data[originalIndex] };
-            
-            
-            newImage.id = currentList[currentList.length - 1].id + 1;
-            
-            nextCopyIndex.current += 1;
-            
-            return newImage;
-        }
+    //CHIAMATA API PER PRENDERE LE IMMAGINI DEL CAROSELLO
+    const { data, loading, error } = useFetchApiGet<ICarouselImage[]>("http://localhost:3000/api/carousel");
+    //USE STATE PER ABILITARE/DISABILITARE LA TRANSIZIONE
+    const [transitionEnabled, setTransitionEnabled] = useState(true);
+    //INDICE IMMAGINE MOSTRATA
+    const [currentIndex, setCurrentIndex] = useState(0);
+    //INDICE IMMAGINE DA SCORRERE
+    const nextCopyIndex = useRef(0);
+    //ARRAY DI IMMAGINI
+    const imagesData = useRef(data);
+
+    /**
+     * FUNZIONE CHE SI OCCUPA DI RITORNARE IL PROSSIMO OGGETTO IMAGINE CHE BISOGNA MOSTRARE CON ID DIVERSO
+     * * @param currentList - LISTA DI IMMAGINI DA CUI è COMPOSTO IL CAROSELLO
+     * @returns ICarouselImage RITORNA ICarouselImage
+    */
+    function getNextImage(currentList: ICarouselImage[]) : ICarouselImage {
+    
+        const originalIndex = nextCopyIndex.current % data!.length;
+        const newImage = { ...data![originalIndex] };
+        newImage.id = currentList![currentList!.length - 1].id + 1;
+        nextCopyIndex.current += 1;
+
+        return newImage;
         
+
     }
 
-    useEffect(() => {
-        if(data!==null) {
-             const interval = setInterval(() => {
-             setCurrentIndex((prev) => prev + 1);
-            setTransitionEnabled(true); // Riattiva l'animazione se era spenta
-           
-        }, 3000);
 
-        return () => clearInterval(interval);
+    //USE EFFECT CHE OGNI 3SEC AGGIORNA L'INDICE PER PASSARE ALLA PROSSIMA IMMAGINE E ABILITA L'ANIMAZIONE
+    useEffect(() => {
+        if (data !== null) {
+            const interval = setInterval(() => {
+                setCurrentIndex((prev) => prev + 1);
+                setTransitionEnabled(true); // Riattiva l'animazione se era spenta
+
+            }, 3000);
+
+            return () => clearInterval(interval);
         }
-       
+
     }, [data]);
 
-    
-    if(!data && loading) {
+
+    if (!data && loading) {
         return (<CircularProgress className={style.loading}></CircularProgress>);
-    } else if(imagesData.current!==null && data!==null) {
-       
-       
-        if(currentIndex>=imagesData.current.length) {
+    } else if (imagesData.current !== null && data !== null) {
+
+        //CODICE CHE SI OCCUPA DI AGGIORNARE LA LISTA DI IMMAGINI DA MOSTRARE RICHIAMANDO LE VARIE FUNZIONI E SI OCCUPA ANCHE OGNI 15 IMMAGINI IN LISTA DI TOGLIERE LE ULTIME 5 PER NON APPESANTIRE LA PAGINA
+        if (currentIndex >= imagesData.current.length) {
             const nextImg = getNextImage(imagesData.current);
             let newArray = [...imagesData.current, nextImg];
-             let newIndex = currentIndex;
+            let newIndex = currentIndex;
 
             if (newArray.length > 15) {
                 const elementsToRemove = 5;
                 newArray = newArray.slice(elementsToRemove);
                 newIndex = newIndex - elementsToRemove;
-                
-                // Disattiviamo momentaneamente l'animazione per rendere il taglio invisibile all'occhio
+
+                // DISATTIVA L'ANIMAZIONE PER RENDERE IL TAGLIO INVISIBILE ALL'OCCHIO
                 setTransitionEnabled(false);
                 setCurrentIndex(newIndex);
             }
@@ -68,45 +79,48 @@ function Carousel() {
             imagesData.current = cleanData;
 
         }
-       
-   
-    return (
-        <div className={style.carouselContainer}>
-            <ul 
-                className={style.sliderTrack} 
-                style={{ 
-                    transform: `translateX(-${currentIndex * 100}%)`,
-                    // Se transitionEnabled è false, lo spostamento è istantaneo (0s)
-                    transition: transitionEnabled ? 'transform 0.5s ease-in-out' : 'none'
-                }}
-            >
-                {imagesData.current.map((img) => (
-                    <li key={img.id} className={style.slide}>
-                        <img src={img.img} alt={img.alt} />
-                    </li>
-                ))}
-            </ul>
 
-            {/* I PUNTINI VANNO FUORI DALLA UL (SLIDER TRACK) */}
-            <div className={style.dotContainer}>
-                {data.map((_, index) => (
-                    <CircleRounded 
-                        key={index} 
-                        sx={{ 
-                            // Calcolo Modulo per accendere il pallino giusto anche se l'indice è 100
-                            color: (currentIndex % data.length) === index ? amber[500] : grey[300],
-                            fontSize: '15px',
-                            cursor: 'pointer'
-                        }} 
-                    />
-                ))}
+
+        return (
+            <div className={style.carouselContainer}>
+                <ul
+                    className={style.sliderTrack}
+                    style={{
+                        transform: `translateX(-${currentIndex * 100}%)`,
+                        // Se transitionEnabled è false, lo spostamento è istantaneo (0s)
+                        transition: transitionEnabled ? 'transform 0.5s ease-in-out' : 'none'
+                    }}
+                >
+                    {/* SEZIONE IMMAGINI CHE SCORRONO */}
+                    {imagesData.current.map((img) => (
+                        <li key={img.id} className={style.slide}>
+                            <img src={img.img} alt={img.alt} />
+                        </li>
+                    ))}
+                </ul>
+
+                {/* SEZIONE CON I PUNTINI GIALLI CHE SI ANIMANO */}
+                <div className={style.dotContainer}>
+                    {data.map((_, index) => (
+                        <CircleRounded
+                            key={index}
+                            sx={{
+                                // Calcolo Modulo per accendere il pallino giusto anche se l'indice è 100
+                                color: (currentIndex % data.length) === index ? amber[500] : grey[300],
+                                fontSize: '15px',
+                                cursor: 'pointer'
+                            }}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
-    )
-} else if(data!==null) {
-        imagesData.current=data;
+        )
+    } else if (data !== null) {
+        //INIZIALIZZO LA LISTA IMMAGINI NON APPENA DATA MI VIENE RESTITUITO DAL BACKEND
+        imagesData.current = data;
     } else {
-        console.log("code: "+error?.status+" message: "+error?.message+" details: "+error?.details);
+        //STAMPO EVENTUALI ERRORI
+        console.log("code: " + error?.status + " message: " + error?.message + " details: " + error?.details);
     }
 }
 

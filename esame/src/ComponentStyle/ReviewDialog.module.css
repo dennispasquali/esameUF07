@@ -1,48 +1,48 @@
-
-
-
-.buttons{
-    border-radius: 8px !important;
-    border: 1.5px solid #1976dc !important;
-    margin-right: 12px !important;
-    margin-top: 24px !important;
+.buttons {
+  border-radius: 8px !important;
+  border: 1.5px solid #1976dc !important;
+  margin-right: 12px !important;
+  margin-top: 24px !important;
 }
 
 .evaluation {
-    font-size: 14px;
-    color: #565959;
+  font-size: 14px;
+  color: #565959;
 }
 
 .review_first_row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.review_first_row img{
-   height: 40px;
-   width: 40px;
-   object-fit: cover;
-   border-radius: 50%;
+.review_first_row img {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-.rating{
-    margin-bottom: 32px;
+.rating {
+  margin-bottom: 32px;
 }
 
-.textField{
-    margin-bottom: 32px;
+.textField {
+  margin-bottom: 32px;
 }
-/* ReviewDialog.module.css */
 
 /* L'animazione dell'entrata dello sfondo */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-/* L'animazione della finestra: parte un po' più in basso e trasparente */
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -60,48 +60,41 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Sfondo scuro semitrasparente */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;     /* Centra verticalmente */
-  justify-content: center; /* Centra orizzontalmente */
-  z-index: 1300;           /* Z-index alto come quello di MUI */
-  
-  /* Applica l'animazione allo sfondo */
+  align-items: center;
+  justify-content: center;
+  z-index: 1300;
   animation: fadeIn 0.3s ease-out forwards;
-  backdrop-filter: blur(2px); /* OPZIONALE: sfoca leggermente lo sfondo dietro (effetto vetro) */
+  backdrop-filter: blur(2px);
 }
 
 .modal_int {
   display: block;
   background-color: white;
-  padding: 24px;          /* Spaziatura interna tipica di MUI */
-  border-radius: 8px;     /* Angoli arrotondati (MUI usa 4px o 8px) */
+  padding: 24px;
+  border-radius: 8px;
   min-width: 600px;
   max-width: 90%;
   position: relative;
-  
-  /* L'ombra "elevata" tipica dei dialoghi */
-  box-shadow: 0px 11px 15px -7px rgba(0,0,0,0.2), 
-              0px 24px 38px 3px rgba(0,0,0,0.14), 
-              0px 9px 46px 8px rgba(0,0,0,0.12);
-
-  /* Applica l'animazione alla finestra */
+  box-shadow:
+    0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+    0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+    0px 9px 46px 8px rgba(0, 0, 0, 0.12);
   animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.title_textField{
-    margin-bottom: 24px;
+.title_textField {
+  margin-bottom: 24px;
 }
 
-
-/* --- ReviewDialog.module.css --- */
-
-/* ... le tue vecchie animazioni di entrata restano qui ... */
-
-/* 1. Definiamo le animazioni di USCITA */
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes slideDown {
@@ -115,9 +108,8 @@
   }
 }
 
-/* 2. Classi che attivano l'uscita */
 .overlayClosing {
-  animation: fadeOut 0.4s forwards; /* "forwards" mantiene lo stato finale */
+  animation: fadeOut 0.4s forwards;
 }
 
 .modalClosing {

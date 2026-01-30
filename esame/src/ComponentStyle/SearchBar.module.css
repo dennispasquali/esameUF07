@@ -1,35 +1,29 @@
-
-
 .search_container input {
   height: 16px;
   padding: 5px 5px 5px 5px;
   border-radius: 6px;
-
 }
 
-.search_container input>fieldset{
- padding: 2px!important;
+.search_container input > fieldset {
+  padding: 2px !important;
 }
 
-
-#lente{
+#lente {
   display: inline-block;
   border-radius: 8px;
   padding: 8px 8px 0px 8px;
-
 }
 
-#lente:hover{
-  background-color: #F3F4F6;
+#lente:hover {
+  background-color: #f3f4f6;
 }
-.search_container{
+.search_container {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 12px;
 }
 
-.search_container img{
+.search_container img {
   margin-top: 2px;
 }
-
