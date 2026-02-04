@@ -55,7 +55,9 @@ email: dennis.pasquali@mat.tn.it
 pwd: 12345
 oAuth + token JWT
 
+
+<p>proggettazione rotte:</p>
 <p align="center">
-  proggettazione rotte:
+
   <img src="./esame/src/assets/rotte.jpg" width="200" />
 </p>
