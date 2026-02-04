@@ -7,14 +7,25 @@ import { title } from "node:process";
   return this.toString();
 };
 export const getProdotti = async (req: Request, res: Response) => {
+  
+   const {page} =req.params;
+   if(!page) {
+    return  res.status(404).send("id pagina non trovato");
+   }
   try {
+
+    console.log(((Number(page)*10)-10)+" "+Number(page)*10);
     const prodotti = await prisma.product.findMany({
+      
+      skip: ((Number(page)*10)-10),
+      take: (Number(page)*10),
       include: {
         reviews: true,
       },
       orderBy: {
         id: "asc", // I più recenti per primi
       },
+     
     });
 
     if (prodotti.length === 0) {

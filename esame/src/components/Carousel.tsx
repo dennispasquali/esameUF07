@@ -13,7 +13,8 @@ import { useFetchApiGet } from "../hooks/useFetchApiGet";
 function Carousel() {
 
     //CHIAMATA API PER PRENDERE LE IMMAGINI DEL CAROSELLO
-    const { data, loading, error } = useFetchApiGet<ICarouselImage[]>("http://localhost:3000/api/carousel");
+    //NELLE OPZIONI GLI DICO CHE I DATI IN CHACHE SONO VALIDI PER 5 MIN E CHE SE LA CHIAMATA FALLISCE RIPROVA 5 VOLTE
+    const { data, isLoading, error} = useFetchApiGet<ICarouselImage[]>(['carousel'], "http://localhost:3000/api/carousel", null, { staleTime: 5000, retry: 5 });
     //USE STATE PER ABILITARE/DISABILITARE LA TRANSIZIONE
     const [transitionEnabled, setTransitionEnabled] = useState(true);
     //INDICE IMMAGINE MOSTRATA
@@ -21,6 +22,7 @@ function Carousel() {
     //INDICE IMMAGINE DA SCORRERE
     const nextCopyIndex = useRef(0);
     //ARRAY DI IMMAGINI
+
     const imagesData = useRef(data);
 
     /**
@@ -28,15 +30,15 @@ function Carousel() {
      * * @param currentList - LISTA DI IMMAGINI DA CUI è COMPOSTO IL CAROSELLO
      * @returns ICarouselImage RITORNA ICarouselImage
     */
-    function getNextImage(currentList: ICarouselImage[]) : ICarouselImage {
-    
+    function getNextImage(currentList: ICarouselImage[]): ICarouselImage {
+
         const originalIndex = nextCopyIndex.current % data!.length;
         const newImage = { ...data![originalIndex] };
         newImage.id = currentList![currentList!.length - 1].id + 1;
         nextCopyIndex.current += 1;
 
         return newImage;
-        
+
 
     }
 
@@ -56,9 +58,9 @@ function Carousel() {
     }, [data]);
 
 
-    if (!data && loading) {
-        return (<CircularProgress className={style.loading}></CircularProgress>);
-    } else if (imagesData.current !== null && data !== null) {
+    if (!data && isLoading) {
+        return (<CircularProgress className={style.isLoading}></CircularProgress>);
+    } else if (imagesData.current !== null && data !== null && data !== undefined && imagesData.current !== undefined) {
 
         //CODICE CHE SI OCCUPA DI AGGIORNARE LA LISTA DI IMMAGINI DA MOSTRARE RICHIAMANDO LE VARIE FUNZIONI E SI OCCUPA ANCHE OGNI 15 IMMAGINI IN LISTA DI TOGLIERE LE ULTIME 5 PER NON APPESANTIRE LA PAGINA
         if (currentIndex >= imagesData.current.length) {
@@ -120,7 +122,11 @@ function Carousel() {
         imagesData.current = data;
     } else {
         //STAMPO EVENTUALI ERRORI
-        console.log("code: " + error?.status + " message: " + error?.message + " details: " + error?.details);
+        if (error !== null) {
+            console.error("code: " + error?.status + " message: " + error?.message + " details: " + error?.details);
+        } else {
+            console.error("errore in home scononosciuto");
+        }
     }
 }
 

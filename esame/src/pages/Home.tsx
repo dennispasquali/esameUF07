@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 
 import { useRef, useState } from "react";
 import Carousel from "../components/Carousel";
@@ -9,112 +10,113 @@ import Footer from "../components/Footer";
 import { useFetchApiGet } from "../hooks/useFetchApiGet";
 import type { IProductItem } from "../Interfaces/ProductItem";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useSearchParams } from "react-router-dom";
+
+// Chiave per il session storage
+const STORAGE_KEY = 'home_pagination_start';
+
+//FUNZIONI PER GESTIRE IL RITORNO DELL'UTENTE ALLA PAGINA SU CUI ERA SE CAMBIA PAGINA
+const getInitialButtons = (currentPage: number): number[] => {
+  const storedString = sessionStorage.getItem(STORAGE_KEY);
+
+  if (storedString) {
+    try {
+
+      const buttons = JSON.parse(storedString) as number[];
 
 
+      if (buttons.includes(currentPage)) {
+        return buttons;
+      }
+    } catch (e) {
+
+      console.error("Errore lettura storage", e);
+    }
+  }
+
+  // SE NON CI SONO I BOTTONI SALVATI IN SESSIONE IMPOSTO DI DEFAULT 1 2 3
+  if (currentPage <= 2) return [1, 2, 3];
+
+  return [currentPage - 1, currentPage, currentPage + 1];
+};
 
 
-
+const saveButtonState = (buttons: number[]) => {
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(buttons));
+};
 function Home() {
 
-  const NUMBER_OF_ITEM_PER_ROW = 10;
-  const { data, loading, error } = useFetchApiGet<IProductItem[]>("http://localhost:3000/api/products");
-  //USE STATE PER DETERMINARE L'INDICE FINALE IN DATA CHE CONTIENE TUTTI I PRODOTTI DELLA PAGINA CORRENTE
-  const [endIndex, setEndIndex] = useState<number>(NUMBER_OF_ITEM_PER_ROW);
-  //USE STATE PER DETERMINARE L'INDICE INIZIALE IN DATA CHE CONTIENE TUTTI I PRODOTTI DELLA PAGINA CORRENTE
-  const [startIndex, setStartIndex] = useState<number>(0);
-  const NUMBER_OF_BUTTONS = 3;
+  //LOGICA QUERY PARAMS PER LE PAGINE IN MODO CHE SE L'UTENTE VA SU UN PRODUCT ITEM E RITORNA INDIETRO RITORNO NELLA PAGINA DOVE ERA DEI PRODOTTI
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
+
   //ARRAY CHE CONTIENE IL NR PAGINA PER I BOTTONI
-  const newPages = useRef<number[]>([1, 2, 3]);
+  const newPages = useRef<number[]>(getInitialButtons(page));
+
+
+  //COSTANTI
+  const NUMBER_OF_ITEMS = 50;
+  const NUMBER_OF_ITEMS_PER_PAGE = 10;
+  const NUMBER_OF_BUTTONS = 3;
+
+  //OTTENGO IL NR DI PAGINE
+  let numberOfPages = (NUMBER_OF_ITEMS / NUMBER_OF_ITEMS_PER_PAGE) + 1;
+  if (Number(((NUMBER_OF_ITEMS / NUMBER_OF_ITEMS_PER_PAGE) % 1).toFixed(2)) === 0.0 || (NUMBER_OF_ITEMS / NUMBER_OF_ITEMS_PER_PAGE) === 0 && NUMBER_OF_ITEMS >= NUMBER_OF_ITEMS_PER_PAGE) {
+    numberOfPages = NUMBER_OF_ITEMS / NUMBER_OF_ITEMS_PER_PAGE;
+  }
+
+
+  //IMPOSTO LA CHIAMATA GET DANDOGLI ANCHE UNA KEY PRODUCTS PER IL CACHING
+  //NELLE OPZIONI GLI DICO CHE I DATI IN CHACHE SONO VALIDI PER 5 MIN E CHE SE LA CHIAMATA FALLISCE RIPROVA 5 VOLTE
+  const { data, isLoading, error } = useFetchApiGet<IProductItem[]>(['products', String(page)], `http://localhost:3000/api/products/${String(page)}`, null, { staleTime: 5000, retry: 5 });
+
+
+  /**
+     * FUNZIONE CHE PERMETTE DI POTER ANDARE AVANTI O INDIETRO NELLE PAGINE CON I BOTTONI
+     * * @param val - di quante pagine si vuole andare indietro o in avanti
+     * @returns void (aggiorna gli useState)
+    */
+  function sliceNextOrPrev(val: number) {
+    if (page + val <= Math.trunc(numberOfPages) && page + val >= 1 && val !== 0) {
+      setSearchParams({ page: String(page + val) });
+
+
+      const pagel = page + val;
+      if (pagel % 2 !== 0 && val >= 1 && newPages.current[2] === pagel && pagel !== 1 && pagel !== 2 && pagel !== Math.trunc(numberOfPages)) {
+        const value = 2;
+        for (let i = 0; i < NUMBER_OF_BUTTONS; i++) {
+          newPages.current[i] = newPages.current[i] + value;
+        }
+        saveButtonState(newPages.current);
+
+      } else if ((newPages.current[0] === page - 1 && val === -1 && pagel !== 1) || (page % 2 == 0 && val <= -1 && newPages.current[0] === page)) {
+        for (let i = 0; i < NUMBER_OF_BUTTONS; i++) {
+          newPages.current[i] = newPages.current[i] - 2;
+        }
+
+        saveButtonState(newPages.current);
+      }
+      setPage(page + val);
 
 
 
-  if (loading) {
-    return (<CircularProgress className={style.loading}></CircularProgress>);
-  } else if (data !== null) {
+    }
+    
+  }
+
+
+
+
+  if (isLoading) {
+    return (<CircularProgress className={style.isLoading}></CircularProgress>);
+  } else if (data !== null && data !== undefined) {
     const prodotti: IProductItem[] = data;
 
-    //FUNZIONE CHE RESETTA/INIZIALIZZA GLI INDICI DELLA PAGINA 1 MOSTRATA DAI BOTTONI
-    function resetCurrentIndexes() {
-      let numberOfRow = (prodotti.length / NUMBER_OF_ITEM_PER_ROW) + 1;
-      if (Number(((prodotti.length / NUMBER_OF_ITEM_PER_ROW) % 1).toFixed(2)) === 0.0 || (prodotti.length / NUMBER_OF_ITEM_PER_ROW) === 0 && prodotti.length >= NUMBER_OF_ITEM_PER_ROW) {
-        numberOfRow = prodotti.length / NUMBER_OF_ITEM_PER_ROW;
-      }
-      let limit = 1;
-      if (numberOfRow >= 3) {
-        limit = 3;
-      } else {
-        limit = numberOfRow;
-      }
-      let ind = 0;
-      for (let i = 0; i < limit; i++) {
-        newPages.current[ind] = i + 1;
-        ind++;
-
-      }
-    }
-
-    //CODICE CHE SI OCCUPA AD OGNI RENDER DI RICAVARE GLI INDICI PER MOSTRARE I PRODUCT ITEM DELLA PAGINA PRECEDENTE O SUCCESSIVA  E DI TROVARE IL NUMERO DI PAGINE MASSIMO (NUMBEROFROW)
-    const productSliced = prodotti.slice(startIndex, endIndex);
-    let numberOfRow = (prodotti.length / NUMBER_OF_ITEM_PER_ROW) + 1;
-    if (Number(((prodotti.length / NUMBER_OF_ITEM_PER_ROW) % 1).toFixed(2)) === 0.0 || (prodotti.length / NUMBER_OF_ITEM_PER_ROW) === 0 && prodotti.length >= NUMBER_OF_ITEM_PER_ROW) {
-      numberOfRow = prodotti.length / NUMBER_OF_ITEM_PER_ROW;
-    }
 
 
 
-    
-    /**
-     * FUNZIONE CHE SI OCCUPA DI PASSARE 1 O X PAGINE SUCCESSIVE
-     * * @param val - il nr di pagine da saltare in avanti
-     * @returns void (aggiorna gli useState)
-    */
-    function sliceNext(val: number) {
-      val = val * NUMBER_OF_ITEM_PER_ROW
-      if (endIndex + val <= (numberOfRow) * NUMBER_OF_ITEM_PER_ROW && startIndex + val <= (numberOfRow - 1) * NUMBER_OF_ITEM_PER_ROW) {
-        setEndIndex((endIndex + val));
-        setStartIndex((startIndex + val));
 
-        const startIndexL = startIndex + val;
-        if (numberOfRow - (startIndexL / NUMBER_OF_ITEM_PER_ROW) > 3) {
-          let index = 0;
-          for (let i = startIndexL / NUMBER_OF_ITEM_PER_ROW; i < startIndexL / NUMBER_OF_ITEM_PER_ROW + NUMBER_OF_BUTTONS; i++) {
-            newPages.current[index] = i + 1;
-            index++;
-          }
-        } else {
-          let index = 2;
-          let i = Math.trunc(numberOfRow);
-          for (i; i > Math.trunc(numberOfRow) - 3; i--) {
-            newPages.current[index] = i;
-            index--;
-
-          }
-        }
-
-      }
-    }
-    
-    /**
-     * FUNZIONE CHE SI OCCUPA DI PASSARE 1 O X PAGINE PRECEDENTI
-     * * @param val - il nr di pagine da saltare indietro
-     * @returns void (aggiorna gli useState)
-    */
-    function slicePrev(val: number) {
-      val = val * NUMBER_OF_ITEM_PER_ROW;
-      if (endIndex - val > 0 && startIndex - val >= 0) {
-        setEndIndex(endIndex => endIndex - val);
-        setStartIndex(startIndex => startIndex - val);
-        let endIndexL = endIndex - val;
-        if (endIndexL >= NUMBER_OF_ITEM_PER_ROW && endIndex <= ((Math.trunc(numberOfRow) + 1) * 10) - 30) {
-          endIndexL = endIndex;
-          let index = 2;
-          for (let i = endIndexL / NUMBER_OF_ITEM_PER_ROW; i > (endIndexL / NUMBER_OF_ITEM_PER_ROW - NUMBER_OF_BUTTONS); i--) {
-            newPages.current[index] = i + 1;
-            index--;
-          }
-        }
-      }
-    }
 
     
     /**
@@ -123,10 +125,10 @@ function Home() {
      * @returns void (aggiorna gli useState)
     */
     function buttonChangePage(valButton: number) {
-      if ((endIndex / NUMBER_OF_ITEM_PER_ROW) < valButton) {
-        sliceNext(valButton - (endIndex / NUMBER_OF_ITEM_PER_ROW));
+      if (page < valButton) {
+        sliceNextOrPrev(valButton - page);
       } else {
-        slicePrev((endIndex / NUMBER_OF_ITEM_PER_ROW) - valButton);
+        sliceNextOrPrev(valButton - page);
       }
 
 
@@ -138,9 +140,9 @@ function Home() {
     //TSX DELLA PAGINA HOME
     return (
       <>
-        <NavBar/>
+        <NavBar />
         <div className={style.carousel}>
-          <Carousel/>
+          <Carousel />
         </div>
 
 
@@ -149,9 +151,9 @@ function Home() {
 
 
           {/* SEZIONE PRODUCT ITEM */}
-          {productSliced.map((prodotto) => (
+          {prodotti.map((prodotto) => (
             <ProductItem
-              reset={resetCurrentIndexes}
+
               key={prodotto.id}
               id={prodotto.id}
               title={prodotto.title}
@@ -167,14 +169,14 @@ function Home() {
           ))}
         </div>
 
-          {/* SEZIONE PER LA GESTIONE DEI BOTTONI PER LE PAGINE DI PRODOTTI*/}
-          {/* ESEMPIO: SE CI SONO 30 PRODOTTI NEL DB METTO I BOTTONI DA 1 A 3 SE CE NE SONO 10 TOLGO I BOTTONI E METTO UN P CON PAG 1 DI 1 */}
-        {prodotti.length > 10 ? <div className={style.buttons_container}>
+        {/* SEZIONE PER LA GESTIONE DEI BOTTONI PER LE PAGINE DI PRODOTTI*/}
+        {/* ESEMPIO: SE CI SONO 30 PRODOTTI NEL DB METTO I BOTTONI DA 1 A 3 SE CE NE SONO 10 TOLGO I BOTTONI E METTO UN P CON PAG 1 DI 1 */}
+        {Math.trunc(NUMBER_OF_ITEMS / 10) >= 1 ? <div className={style.buttons_container}>
 
           <Button
             size="small"
             variant="contained"
-            onClick={() => slicePrev(1)}
+            onClick={() => sliceNextOrPrev(-1)}
           >
             ◀ Indietro
           </Button>
@@ -193,13 +195,13 @@ function Home() {
           <Button
 
             variant="contained"
-            onClick={() => sliceNext(1)}
+            onClick={() => sliceNextOrPrev(1)}
           >
             Avanti ▶
           </Button>
           <div className={style.info_page}>
             <p>
-              Pag {Math.trunc(startIndex / 10) + 1} di {Math.trunc(numberOfRow)}
+              Pag {page} di {Math.trunc(numberOfPages)}
             </p>
           </div>
 
@@ -217,7 +219,12 @@ function Home() {
   } else {
     //STAMPO EVENTUALI ERRORI NELLA CHIAMATA API PER I PRODOTTI (ONGI PRODOTTO è CHIAMATO PRODUCT 
     // ITEM)
-    console.error("code: " + error?.status + " message: " + error?.message + " details: " + error?.details);
+    if (error !== null) {
+      console.error("code: " + error.status + " message: " + error?.message + " details: " + error?.details);
+    } else {
+      console.error("errore in home scononosciuto");
+    }
+
   }
 }
 export default Home

@@ -9,11 +9,11 @@ import type { IUserProfile } from "../Interfaces/UserJWT";
 import { useApiPost } from "../hooks/useApiPost";
 import type { ICartSubmit } from "../Interfaces/CartSubmit";
 
-type TProductItem = IProductItem & {
-  reset: () => void;
-};
+// type TProductItem = IProductItem & {
+//   reset: () => void;
+// };
 
-function ProductItem({ reset, id, img, qt, title, description, rating, numberOfRatings, price, oldPrice, shippingDate }: TProductItem) {
+function ProductItem({ id, img, qt, title, description, rating, numberOfRatings, price, oldPrice, shippingDate }: IProductItem) {
   //RECUPERO IL TOKEN JWT UTENTE 
   const token: string | null = localStorage.getItem("token");
   //LEGGO I DATI JSON DELL'UTENTE SALVATI NELLA PROCEDURA DI REGISTRAZIONE E LOGIN
@@ -86,7 +86,7 @@ function ProductItem({ reset, id, img, qt, title, description, rating, numberOfR
      * @returns void FA IL NAVIGATE VERSO PRODUCT DETAIL
     */
     function handleProductClick() {
-      reset();
+     // reset();
       // Naviga verso l'URL specifico usando l'ID passato nelle props
       navigate(`/home/productDetail/${id}`, { state: productData });
     }

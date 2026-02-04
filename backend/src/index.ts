@@ -11,6 +11,7 @@ import './config/passport';
 import LoginRoutes from './routes/LoginRoutes';
 import OrdersRoutes from './routes/OrdersRoutes';
 import CartRoutes from './routes/CartRoutes';
+import { getEmployees } from './controllers/EmployeesController';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -24,6 +25,7 @@ app.use('/api/login',LoginRoutes);
 app.use('/auth', OauthRoutes);
 app.use('/api/orders',OrdersRoutes);
 
+app.get('/api/employee',getEmployees);
 app.get('/api/carousel',getImageData)
 
 app.use('/api/cart',CartRoutes);

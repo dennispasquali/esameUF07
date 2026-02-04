@@ -8,11 +8,11 @@ fare npm i sulle cartelle backend e esame per scaricare le dipendenze
 
 poi aggiungere sotto la cartella backend un file .emv con questi dati
 
-DATABASE_URL="file:./dev.db"
+<!-- DATABASE_URL="file:./dev.db"
 FRONTEND_URL=http://localhost:5173
 JWT_SECRET="ax273456u9"
 GOOGLE_CLIENT_ID=530349984082-i9dc7gul41fhcgkvj29imgfd71r8bciu.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+GOOGLE_CLIENT_SECRET=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 -->
 
 infine digitare su /backend il comando npx prisma generate per generare i modelli ts che usara il backend per comunicare con il db
 
@@ -54,3 +54,8 @@ per vedere come appaiono nella pagina profilo gli ordini passati e recenti basta
 email: dennis.pasquali@mat.tn.it
 pwd: 12345
 oAuth + token JWT
+
+<p align="center">
+  proggettazione rotte:
+  <img src="./esame/src/assets/rotte.jpg" width="200" />
+</p>

@@ -36,7 +36,7 @@ function Cart() {
     const userData: IUserProfile = storedUserString ? JSON.parse(storedUserString) : -1;
 
     //API GET PER RECUPERO ORDINI CARRELLO DAL DB
-    const { data, error } = useFetchApiGet<ICartOrder[]>(`http://localhost:3000/api/cart/${userData.id}`, token);
+    const { data, error } = useFetchApiGet<ICartOrder[]>(['cart_orders'],`http://localhost:3000/api/cart/${userData.id}`,token,{retry: 5});
     //API POST PER POTER AGGIUNGERE O RIMUOVERE PRODOTTI DAL CARRELLO NEL DB
     const { mutate } = useApiPost<IAddOrRemoveFromCart, string>(`http://localhost:3000/api/cart/submit`, token);
     //USE STATE CONTENTE I VARI ITEM NEL CARRELLO
@@ -54,7 +54,7 @@ function Cart() {
     //USE EFFECT CHE INIZIALIZZA GLI USE STATE PER EFFETTUARE I CALCOLI PER I PREZZI E QUANTITA E PREZZO FINALE DEGLI ITEM NEL CARRELLO E L'IVA NON APPENA I DATI DELLA GET PER OTTENERE I PRODOTTI NEL CARRELLO SI SONO CARICATI
     useEffect(() => {
 
-        if (data !== null && items.length == 0) {
+        if (data !== null && items.length == 0 && data!==undefined) {
             console.log(data);
             setItems(...[data]);
             const qt: number[] = [0];
@@ -125,7 +125,7 @@ function Cart() {
                 setItemQuantity(itemQuantityl);
 
             }
-            if (data !== null) {
+            if (data !== null && data!==undefined) {
                 const dataToSubmit = {
                     idOrder: data[i].id,
                     idUser: userData.id,
@@ -169,7 +169,7 @@ function Cart() {
    */
         async function handleRemove(id: number) {
 
-            if (data !== null) {
+            if (data !== null && data!==undefined) {
                 const result = await executeDelete(
                     `http://localhost:3000/api/cart/delete/item/${data[id].id}`,
                     token,
@@ -243,7 +243,7 @@ function Cart() {
                             </ul>
 
 
-                            <Button startIcon={<ArrowBackIcon />} onClick={() => navigate("/home")} sx={{ mt: 3, fontWeight: 600, color: 'text.secondary' }}>
+                            <Button startIcon={<ArrowBackIcon />} onClick={() => navigate("/homez")} sx={{ mt: 3, fontWeight: 600, color: 'text.secondary' }}>
                                 Continua lo shopping
                             </Button>
 

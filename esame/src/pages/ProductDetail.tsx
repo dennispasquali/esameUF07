@@ -34,7 +34,7 @@ function ProductDetail() {
 
   const quantityRef = useRef<HTMLInputElement>(null);
   //API GET PER RECUPERARE LE RECENSIONI DEL PRODOTTO
-  const { data, error, loading } = useFetchApiGet<IReview[]>(`http://localhost:3000/api/products/${productData.id}/reviews`);
+  const { data, error, isLoading } = useFetchApiGet<IReview[]>(['reviews'],`http://localhost:3000/api/products/${productData.id}/reviews`,null,{staleTime: 5000,retry: 1});
   const [userData, setUserData] = useState<IReviewDialog | null>(null);
   const [addReviewError, setAddReviewError] = useState<string>("");
   const token: string | null = localStorage.getItem('token');
@@ -93,7 +93,7 @@ function ProductDetail() {
 
   //METTO IN REVIEW I DATI PRESI DAL BACKEND
   let reviews: IReview[] = [];
-  if (data !== null) {
+  if (data !== null && data!==undefined) {
     reviews = data;
   }
 
@@ -138,6 +138,8 @@ function ProductDetail() {
   //SE I DATI NON CI SONO NAVIGA VERSO HOME
   useEffect(() => {
     if (!productData) {
+      // const [searchParams, setSearchParams] = useSearchParams();
+      // const rawPage = searchParams.get('page'); 
       navigate("/home");
     }
   }, [productData, navigate]);
@@ -348,7 +350,7 @@ function ProductDetail() {
 
 
           <div id={style.div_review}>
-            {loading ? <CircularProgress className={style.loading}></CircularProgress> : error !== null && reviews.length === 0 ? <p>Non ci sono recensioni</p> : error ? "" : reviews.map((review) => (
+            {isLoading ? <CircularProgress className={style.isLoading}></CircularProgress> : error !== null && reviews.length === 0 ? <p>Non ci sono recensioni</p> : error ? "" : reviews.map((review) => (
               <Review
                 key={review.id}
                 id={review.id}

@@ -21,9 +21,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 //COMPONENTE PAGINA PROFILE
 function Profile() {
   //CHIAMATA API PER GLI ORDINI IN ARRIVO (CORRENTI)
-  const { data: toArriveOrders, loading: toArriveOrdersLoading, error: toArriveOrdersError } = useFetchApiGet<IOrder[]>("http://localhost:3000/api/orders/toArrive", localStorage.getItem("token"));
+  const { data: toArriveOrders,isLoading: toArriveOrdersLoading, error: toArriveOrdersError } = useFetchApiGet<IOrder[]>(['orders_toArrive_profile'],"http://localhost:3000/api/orders/toArrive", localStorage.getItem("token"),{staleTime: 5000,retry: 5});
   //CHIAMATA API PER GLI ORDINI PASSATI
-  const { data: arrivedOrders, loading: arrivedOrdersLoading, error: arrivedOrdersError } = useFetchApiGet<IOrder[]>("http://localhost:3000/api/orders/arrived", localStorage.getItem("token"));
+  const { data: arrivedOrders,isLoading: arrivedOrdersLoading, error: arrivedOrdersError } = useFetchApiGet<IOrder[]>(['orders_arrivedOrders_profile'],"http://localhost:3000/api/orders/arrived", localStorage.getItem("token"),{staleTime: 5000,retry: 5});
 
   const navigate = useNavigate();
   let activeOrders: number = 0;
@@ -39,11 +39,11 @@ function Profile() {
   } else {
 
     //TROVO IL NR DI ORDINI ATTIVI E IN SPEDIZIONE
-    if (toArriveOrders !== null) {
+    if (toArriveOrders !== null && toArriveOrders!==undefined) {
       activeOrders = toArriveOrders.length;
     }
 
-    if (toArriveOrders !== null) {
+    if (toArriveOrders !== null && toArriveOrders!==undefined) {
       let count: number = 0;
       toArriveOrders.map((o) => {
         if (o.status === "Spedito") {
@@ -131,14 +131,14 @@ function Profile() {
           {/* SEZIONE ORDINI */}
           <div className={style.your_orders}>
             <h2>I Tuoi Ordini</h2>
-            {toArriveOrdersLoading ? <CircularProgress className={style.loading}></CircularProgress> : ""}
+            {toArriveOrdersLoading===true ? <CircularProgress className={style.loading}></CircularProgress> : ""}
             {toArriveOrders != null && toArriveOrders?.length !== 0 ? <ScrollBarOrders orders={toArriveOrders} height="450px"></ScrollBarOrders> : <h3>Non ci sono ordini in stato di arrivo</h3>}
             {toArriveOrdersError ? <h3>C'è stato un errore nella visualizzazione dei suoi ordini</h3> : ""}
           </div>
 
           <div className={style.last_orders}>
             <h2>Ordini Fatti in Precedenza</h2>
-            {arrivedOrdersLoading ? <CircularProgress className={style.loading}></CircularProgress> : ""}
+            {arrivedOrdersLoading===true ? <CircularProgress className={style.loading}></CircularProgress> : ""}
             {arrivedOrders != null && arrivedOrders?.length !== 0 ? <ScrollBarOrders orders={arrivedOrders} height="450px"></ScrollBarOrders> : <h3>Non ci sono ordini passati</h3>}
             {arrivedOrdersError ? <h3>C'è stato un errore nella visualizzazione dei suoi ordini passati</h3> : ""}
           </div>

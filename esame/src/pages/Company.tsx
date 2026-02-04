@@ -7,38 +7,14 @@ import Typography from "@mui/material/Typography"
 import NavBar from "../components/NavBar"
 import Footer from "../components/Footer"
 import MapComponent from "../components/MapComponent"
-
+import { useFetchApiGet } from "../hooks/useFetchApiGet";
+import type { IEmployee } from "../Interfaces/Employee"
 
 //COMPONENTE PER LA PAGINA DELL AZIENDA
 function Company() {
   //LISTA IMPIEGATI
-  const employers = [
-    {
-      "id": 1,
-      "name": "Paolo",
-      "description": "Cuffie Wireless con Noise Cancelling leader del settore, 30 ore di batteria.",
-      "role": "co-founder",
-    },
-    {
-      "id": 2,
-      "name": "Silvia",
-      "description": "Cuffie Wireless con Noise Cancelling leader del settore, 30 ore di batteria.",
-      "role": "co-founder",
-    },
-    {
-      "id": 3,
-      "name": "Silvano",
-      "description": "Cuffie Wireless con Noise Cancelling leader del settore, 30 ore di batteria.",
-      "role": "co-founder",
-    },
-    {
-      "id": 4,
-      "name": "Veronica",
-      "description": "Cuffie Wireless con Noise Cancelling leader del settore, 30 ore di batteria.",
-      "role": "co-founder",
-    }
-  ]
-
+  const {data}=useFetchApiGet<IEmployee[]>(['employee'],"http://localhost:3000/api/employee",null,{staleTime: 5000,retry: 5});
+  console.log(data);
   return (
     <>
       <NavBar />
@@ -55,7 +31,6 @@ function Company() {
       <div className={style.history}>
         <h2> CHI SIAMO</h2>
         <p>
-
           Siamo un’azienda con sede in Trentino, presente dal 1995 nel mercato della produzione di stampati e della comunicazione visiva.
         </p>
         <p>
@@ -74,27 +49,27 @@ function Company() {
 
       {/* SEZIONE CARD CON I DIPENDENTI */}
       <div className={style.card_container}>
-        {employers.map((emp) => (
+        {data!==null && data!==undefined? data.map((emp) => (
           <Card sx={{ maxWidth: 345 }} key={emp.id}>
             <CardMedia
               component="img"
               alt="green iguana"
               height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
+              image={emp.img}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {emp.name}
+                {emp.name+" "+emp.surname}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {emp.description}
+                {emp.task}
               </Typography>
               <Typography>
                 {emp.role}
               </Typography>
             </CardContent>
           </Card>
-        ))}
+        )):""}
       </div>
       
       {/* SEZIONE MAPPA CON INFO */}
