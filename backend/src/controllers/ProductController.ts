@@ -13,8 +13,6 @@ export const getProdotti = async (req: Request, res: Response) => {
     return  res.status(404).send("id pagina non trovato");
    }
   try {
-
-    console.log(((Number(page)*10)-10)+" "+Number(page)*10);
     const prodotti = await prisma.product.findMany({
       
       skip: ((Number(page)*10)-10),
